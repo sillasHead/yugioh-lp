@@ -71,35 +71,38 @@
 }
 
 .bar-1 {
-  background-color: #4bd600;
+  /* background-color: #0c1dcd; */
+  background-color: #0721cf;
 }
 
 .bar-2 {
-  background-color: #9dff00;
+  background-color: #2482d8;
 }
 
 .bar-3 {
-  background-color: #d0ff00;
+  background-color: #36c5dc;
 }
 
 .bar-4 {
-  background-color: #fffb14;
+  background-color: #58ea39;
 }
 
 .bar-5 {
-  background-color: #fff700;
+  background-color: #b9f12f;
 }
 
 .bar-6 {
-  background-color: #fda93b;
+  background-color: #f5d930;
 }
 
 .bar-7 {
-  background-color: #e44732;
+  background-color: #ee8224;
+  /* background-color: #da4c21; */
 }
 
 .bar-8 {
-  background-color: #d12709;
+  background-color: #a9171f;
+  /* background-color: #d3181a; */
 }
 
 .gauge-lp {
