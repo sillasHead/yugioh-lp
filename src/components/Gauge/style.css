@@ -1,5 +1,5 @@
 :root {
-  --gauge-size: 600px;
+  --gauge-size: 30vw;
 }
 
 .gauge-container {
@@ -23,7 +23,6 @@
   left: 11.5%;
   width: calc(var(--gauge-size) / 7.85);
   height: calc(var(--gauge-size) / 2.01);
-  border-radius: 5px;
   background:
     url('../../assets/noise-texture.png'),
     linear-gradient(to bottom, #2c3e50, #1a252f);
@@ -74,24 +73,31 @@
 .bar-1 {
   background-color: #4bd600;
 }
+
 .bar-2 {
   background-color: #9dff00;
 }
+
 .bar-3 {
   background-color: #d0ff00;
 }
+
 .bar-4 {
   background-color: #fffb14;
 }
+
 .bar-5 {
   background-color: #fff700;
 }
+
 .bar-6 {
   background-color: #fda93b;
 }
+
 .bar-7 {
   background-color: #e44732;
 }
+
 .bar-8 {
   background-color: #d12709;
 }
@@ -127,9 +133,58 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
-  transform: translateY(-35%);
 }
+
 .reset {
   grid-column: 2 / span 2;
   justify-self: center;
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    --gauge-size: 20vw;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  :root {
+    --gauge-size: 50vw;
+  }
+
+  .life-actions {
+    width: 90%;
+    gap: 0.25rem;
+
+    & button {
+      padding: 0.5em 0.2em;
+    }
+  }
+
+  .gauge-container {
+    width: 100%;
+  }
+
+  .gauge-bar {
+    &>*:not(:first-child) {
+      width: 100%;
+      height: calc(100% / 8);
+      padding: 1px 1.5px;
+
+      &:nth-child(1) {
+        padding-top: 1.5px;
+      }
+
+      &:last-child {
+        padding-bottom: 1.5px;
+      }
+    }
+  }
+
+  .bar {
+    border-radius: 2px;
+  }
+
+  .reset {
+    display: none;
+  }
 }

@@ -4,6 +4,8 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
+
+  margin: 0 50px;
 }
 
 button {
@@ -36,7 +38,7 @@ img {
   transform: translate(-50%, 100%) rotate(-360deg);
 }
 
-.reset-game > * {
+.reset-game>* {
   transition: all 1s linear;
   animation: reset-game 5s linear infinite;
 }
@@ -48,5 +50,22 @@ img {
 
   100% {
     transform: rotate(0deg);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .game-actions {
+    margin: 20px 0;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    width: 90%;
+    margin: 0;
+
+    & img, svg {
+      width: 30px;
+      height: 30px;
+    }
   }
 }

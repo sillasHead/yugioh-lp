@@ -200,7 +200,7 @@ const Gauge = forwardRef<GaugeHandle, Props>(function Gauge(
           </button>
         ))}
         <button type="button" className="reset btn-gray" onClick={reset}>
-          <RefreshCcw size={16} />
+          <RefreshCcw size={'1.25em'} />
         </button>
       </div>
     </div>
