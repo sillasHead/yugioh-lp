@@ -6,6 +6,12 @@ Contador de **Life Points**, inspirado em **Yu-Gi-Oh! GX**, feito com **React + 
 
 ## 📸 Preview
 
-![screenshot](./preview.png)
+### 🖥 Desktop
+
+![Desktop view](./preview.png)
+
+
+### 📱 Mobile
+<img src="./mobile.png" alt="Mobile view" width="250" />
 
 👉 [https://sillasHead.github.io/yugioh-lp](https://sillasHead.github.io/yugioh-lp)
