@@ -1,5 +1,11 @@
 import { RefreshCcw } from 'lucide-react'
-import { forwardRef, useImperativeHandle, useReducer, useRef } from 'react'
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useReducer,
+  useRef,
+} from 'react'
 import gauge from '../../assets/gauge.png'
 import './style.css'
 
@@ -26,6 +32,7 @@ export type GaugeHandle = {
 type Props = {
   initialLifePoints?: number
   playerDirection?: 'left' | 'right'
+  player: string
 }
 
 // ---------- initial state ----------
@@ -79,13 +86,17 @@ export function reducer(state: State, action: Action): State {
 }
 
 const Gauge = forwardRef<GaugeHandle, Props>(function Gauge(
-  { initialLifePoints = 8000, playerDirection = 'left' }: Props,
+  { initialLifePoints = 8000, playerDirection = 'left', player }: Props,
   ref,
 ) {
+  const savedLP = localStorage.getItem(player)
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
-    lifePoints: initialLifePoints,
-    displayedLifePoints: initialLifePoints,
+    lifePoints: savedLP ? Number(savedLP) : initialLifePoints,
+    displayedLifePoints: savedLP ? Number(savedLP) : initialLifePoints,
+    lifePointsPercentage: savedLP
+      ? (Number(savedLP) / initialLifePoints) * 100
+      : 100,
   })
   const startTimeRef = useRef<number>(0)
   const delay = 800
@@ -137,6 +148,10 @@ const Gauge = forwardRef<GaugeHandle, Props>(function Gauge(
     animateVisual(state.lifePoints)
     dispatch({ type: 'RESET', initialLifePoints })
   }
+
+  useEffect(() => {
+    localStorage.setItem(player, String(state.lifePoints))
+  }, [state.lifePoints, player])
 
   useImperativeHandle(ref, () => ({
     reset,

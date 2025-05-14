@@ -28,12 +28,18 @@ function App() {
 
   return (
     <div className="container">
-      <Gauge ref={player1Ref} initialLifePoints={8000} playerDirection="left" />
+      <Gauge
+        ref={player1Ref}
+        initialLifePoints={8000}
+        playerDirection="left"
+        player="player-1"
+      />
       <GameActions resetBoth={resetBoth} />
       <Gauge
         ref={player2Ref}
         initialLifePoints={8000}
         playerDirection="right"
+        player="player-2"
       />
     </div>
   )

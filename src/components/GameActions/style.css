@@ -68,4 +68,8 @@ img {
       height: 30px;
     }
   }
+
+  .active-coin {
+    transform: translate(-50%, 100%) rotate(-360deg);
+  }
 }
