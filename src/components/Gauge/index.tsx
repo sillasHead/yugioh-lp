@@ -158,7 +158,7 @@ const Gauge = forwardRef<GaugeHandle, Props>(function Gauge(
   }))
 
   return (
-    <div className="gauge-container">
+    <div className={`gauge-container ${player}`}>
       <div className="gauge" style={{ transform: `scaleX(${scaleX})` }}>
         <img src={gauge} alt="Gauge" />
         <div
