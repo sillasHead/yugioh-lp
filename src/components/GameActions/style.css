@@ -1,0 +1,52 @@
+.game-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+button {
+  width: 100%;
+}
+
+img {
+  width: 60px;
+}
+
+.actions {
+  position: relative;
+}
+
+.coin, .dice {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+
+  transition: all .2s linear;
+}
+
+.active-coin {
+  transform: translate(-50%, -200%) rotate(360deg);
+}
+
+.active-dice {
+  transform: translate(-50%, 100%) rotate(-360deg);
+}
+
+.reset-game > * {
+  transition: all 1s linear;
+  animation: reset-game 5s linear infinite;
+}
+
+@keyframes reset-game {
+  0% {
+    transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}

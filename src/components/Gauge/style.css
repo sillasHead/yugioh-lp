@@ -1,0 +1,135 @@
+:root {
+  --gauge-size: 600px;
+}
+
+.gauge-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.gauge {
+  position: relative;
+
+  & img {
+    width: var(--gauge-size);
+  }
+}
+
+.gauge-bar {
+  position: absolute;
+  top: 23.9%;
+  left: 11.5%;
+  width: calc(var(--gauge-size) / 7.85);
+  height: calc(var(--gauge-size) / 2.01);
+  border-radius: 5px;
+  background:
+    url('../../assets/noise-texture.png'),
+    linear-gradient(to bottom, #2c3e50, #1a252f);
+  background-blend-mode: overlay;
+  background-size: cover;
+  background-color: #171612;
+
+  &>*:not(:first-child) {
+    width: 100%;
+    height: calc(100% / 8);
+    padding: 1.5px 3px;
+
+    &:nth-child(1) {
+      padding-top: 3px;
+    }
+
+    &:last-child {
+      padding-bottom: 3px;
+    }
+  }
+}
+
+.empty-bar {
+  position: absolute;
+  width: 100%;
+  background:
+    url('../../assets/noise-texture.png'),
+    linear-gradient(to bottom, #2c3e50, #1a252f);
+  background-blend-mode: overlay;
+  background-size: cover;
+  background-color: #171612;
+  border-radius: 2px;
+
+  transition: all .9s ease-out;
+}
+
+.bar {
+  width: 100%;
+  height: 100%;
+  background:
+    url('../../assets/noise.png'),
+    linear-gradient(to bottom, #2c3e50, #1a252f);
+  background-blend-mode: overlay;
+  background-size: cover;
+  border-radius: 2px;
+}
+
+.bar-1 {
+  background-color: #4bd600;
+}
+.bar-2 {
+  background-color: #9dff00;
+}
+.bar-3 {
+  background-color: #d0ff00;
+}
+.bar-4 {
+  background-color: #fffb14;
+}
+.bar-5 {
+  background-color: #fff700;
+}
+.bar-6 {
+  background-color: #fda93b;
+}
+.bar-7 {
+  background-color: #e44732;
+}
+.bar-8 {
+  background-color: #d12709;
+}
+
+.gauge-lp {
+  text-align: right;
+  position: absolute;
+  top: 34%;
+  left: 32%;
+  font-size: calc(var(--gauge-size) / 7.75);
+  width: calc(var(--gauge-size) / 2.125);
+  background-color: transparent;
+  border: none;
+
+  animation: count-color 0.5s linear infinite alternate;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+@keyframes count-color {
+  0% {
+    color: white;
+  }
+
+  100% {
+    color: none;
+  }
+}
+
+.life-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  transform: translateY(-35%);
+}
+.reset {
+  grid-column: 2 / span 2;
+  justify-self: center;
+}
