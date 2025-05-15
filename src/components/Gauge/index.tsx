@@ -209,11 +209,13 @@ const Gauge = forwardRef<GaugeHandle, Props>(function Gauge(
             💥 {action}
           </button>
         ))}
-        {lifeActions.map((action) => (
-          <button key={action} type="button" onClick={() => heal(action)}>
-            💚 {action}
-          </button>
-        ))}
+        {lifeActions
+          .map((action) => (
+            <button key={action} type="button" onClick={() => heal(action)}>
+              💚 {action}
+            </button>
+          ))
+          .reverse()}
         <button type="button" className="reset btn-gray" onClick={reset}>
           <RefreshCcw size={'1.25em'} />
         </button>
