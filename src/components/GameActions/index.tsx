@@ -12,7 +12,7 @@ import Dice4 from '../../assets/dice/dice-4.svg'
 import Dice5 from '../../assets/dice/dice-5.svg'
 import Dice6 from '../../assets/dice/dice-6.svg'
 import Dice from '../../assets/dice/dice.svg'
-import { useLife } from '../../hooks/LifeContext'
+import { useGameLife, useLife } from '../../hooks/LifeContext'
 import './style.css'
 
 type Props = {
@@ -22,17 +22,14 @@ type Props = {
 export function GameActions({ players }: Props) {
   const p1 = useLife(players[0])
   const p2 = useLife(players[1])
-
-  const isThereHistory = p1.isLastOnHistory() || p2.isLastOnHistory()
+  const { canUndo, undo: undoLastAction } = useGameLife()
 
   const delay = 1250
 
   const tailRef = useRef<HTMLImageElement>(null)
   const faceRef = useRef<HTMLImageElement>(null)
 
-  const diceRefs = Array.from({ length: 6 }, () =>
-    useRef<HTMLImageElement>(null),
-  )
+  const diceRefs = useRef<Array<HTMLImageElement | null>>([])
   const diceImages = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6]
 
   function resetLifePoints() {
@@ -62,20 +59,16 @@ export function GameActions({ players }: Props) {
 
   function handleDiceRoll() {
     const randomIndex = Math.floor(Math.random() * 6)
-    const ref = diceRefs[randomIndex]
+    const ref = diceRefs.current[randomIndex]
 
-    ref.current?.classList.add('active-dice')
+    ref?.classList.add('active-dice')
     setTimeout(() => {
-      ref.current?.classList.remove('active-dice')
+      ref?.classList.remove('active-dice')
     }, delay)
   }
 
   function undo() {
-    if (p1.isLastOnHistory()) {
-      p1.undo()
-    } else if (p2.isLastOnHistory()) {
-      p2.undo()
-    }
+    undoLastAction()
   }
 
   return (
@@ -96,7 +89,7 @@ export function GameActions({ players }: Props) {
         <RefreshCcw size={60} />
       </button>
 
-      <button type="button" onClick={undo} disabled={!isThereHistory}>
+      <button type="button" onClick={undo} disabled={!canUndo}>
         <Undo2 size={60} />
       </button>
 
@@ -105,7 +98,9 @@ export function GameActions({ players }: Props) {
           <img
             key={img}
             className="dice"
-            ref={diceRefs[i]}
+            ref={(element) => {
+              diceRefs.current[i] = element
+            }}
             src={img}
             alt={`Dice ${i + 1}`}
           />
