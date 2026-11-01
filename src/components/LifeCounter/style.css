@@ -1,5 +1,5 @@
 :root {
-  --counter-size: clamp(240px, 28vw, 500px);
+  --counter-size: clamp(240px, 30vw, 560px);
 }
 
 .life-counter {

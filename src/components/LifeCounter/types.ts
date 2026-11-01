@@ -4,4 +4,7 @@ export type CounterSkinProps = {
   value: number | 'win' | 'loser'
   lifePointsPercentage: number
   direction: 'left' | 'right'
+  name: string
+  wins: number
+  losses: number
 }

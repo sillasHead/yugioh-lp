@@ -24,15 +24,26 @@ export function LifeCounter({
   playerDirection,
   theme = 'gx',
 }: Props) {
-  const { displayedLifePoints, lifePointsPercentage, hit, heal, reset } =
-    useLife(playerId)
-  const otherPlayerLifePoints = useLife(otherPlayerId).displayedLifePoints
+  const {
+    lifePoints,
+    displayedLifePoints,
+    lifePointsPercentage,
+    name,
+    wins,
+    losses,
+    hit,
+    heal,
+    reset,
+  } = useLife(playerId)
+  const otherPlayer = useLife(otherPlayerId)
+  const otherPlayerLifePoints = otherPlayer.lifePoints
+  const matchEnded = lifePoints === 0 || otherPlayer.lifePoints === 0
   const CounterSkin = counterSkins[theme]
 
   const value =
     otherPlayerLifePoints === 0
       ? 'win'
-      : displayedLifePoints === 0
+      : lifePoints === 0
         ? 'loser'
         : displayedLifePoints
 
@@ -42,15 +53,28 @@ export function LifeCounter({
         value={value}
         lifePointsPercentage={lifePointsPercentage}
         direction={playerDirection}
+        name={name}
+        wins={wins}
+        losses={losses}
       />
       <div className="life-actions">
         {lifeActions.map((amount) => (
-          <button key={`damage-${amount}`} type="button" onClick={() => hit(amount)}>
+          <button
+            key={`damage-${amount}`}
+            type="button"
+            onClick={() => hit(amount)}
+            disabled={matchEnded}
+          >
             💥 {amount}
           </button>
         ))}
         {[...lifeActions].reverse().map((amount) => (
-          <button key={`heal-${amount}`} type="button" onClick={() => heal(amount)}>
+          <button
+            key={`heal-${amount}`}
+            type="button"
+            onClick={() => heal(amount)}
+            disabled={matchEnded}
+          >
             💚 {amount}
           </button>
         ))}

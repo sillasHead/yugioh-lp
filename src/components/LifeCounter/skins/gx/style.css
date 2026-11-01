@@ -15,10 +15,43 @@
   top: 34%;
   left: 32%;
   width: 47%;
-  font-size: clamp(2rem, calc(var(--counter-size) / 7.75), 4.25rem);
+  font-size: min(
+    calc(var(--counter-size) / 6.8),
+    calc(var(--counter-size) * 0.47 / (0.68 * var(--score-length)))
+  );
   line-height: 1.2;
   text-align: right;
   white-space: nowrap;
+}
+
+.gx-counter-player {
+  position: absolute;
+  top: 68%;
+  left: 29%;
+  display: flex;
+  width: 53%;
+  height: 8%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 0 3%;
+  color: #dce8e5;
+  font-family: system-ui, sans-serif;
+  font-size: clamp(0.48rem, calc(var(--counter-size) / 34), 0.95rem);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.gx-counter-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gx-counter-record {
+  flex: none;
+  font-size: 0.8em;
 }
 
 .gx-counter-life-bar {

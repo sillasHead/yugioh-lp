@@ -1,10 +1,10 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 import CoinToss from '../../assets/coin/coin-toss.svg'
 import Face from '../../assets/coin/face.png'
 import Tail from '../../assets/coin/tail.png'
 
-import { RefreshCcw, Undo2 } from 'lucide-react'
+import { RefreshCcw, Settings2, Undo2 } from 'lucide-react'
 import Dice1 from '../../assets/dice/dice-1.svg'
 import Dice2 from '../../assets/dice/dice-2.svg'
 import Dice3 from '../../assets/dice/dice-3.svg'
@@ -12,7 +12,8 @@ import Dice4 from '../../assets/dice/dice-4.svg'
 import Dice5 from '../../assets/dice/dice-5.svg'
 import Dice6 from '../../assets/dice/dice-6.svg'
 import Dice from '../../assets/dice/dice.svg'
-import { useGameLife, useLife } from '../../hooks/LifeContext'
+import { useGameLife } from '../../hooks/LifeContext'
+import { GameSettings } from '../GameSettings'
 import './style.css'
 
 type Props = {
@@ -20,9 +21,12 @@ type Props = {
 }
 
 export function GameActions({ players }: Props) {
-  const p1 = useLife(players[0])
-  const p2 = useLife(players[1])
-  const { canUndo, undo: undoLastAction } = useGameLife()
+  const {
+    canUndo,
+    resetAll,
+    undo: undoLastAction,
+  } = useGameLife()
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
   const delay = 1250
 
@@ -31,11 +35,6 @@ export function GameActions({ players }: Props) {
 
   const diceRefs = useRef<Array<HTMLImageElement | null>>([])
   const diceImages = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6]
-
-  function resetLifePoints() {
-    p1.reset()
-    p2.reset()
-  }
 
   function handleCoinToss() {
     const randomNumber = Math.floor(Math.random() * 2)
@@ -85,12 +84,20 @@ export function GameActions({ players }: Props) {
         </button>
       </div>
 
-      <button type="button" className="reset-game" onClick={resetLifePoints}>
+      <button type="button" className="reset-game" onClick={resetAll}>
         <RefreshCcw size={60} />
       </button>
 
       <button type="button" onClick={undo} disabled={!canUndo}>
         <Undo2 size={60} />
+      </button>
+
+      <button
+        type="button"
+        className="settings-game"
+        onClick={() => setIsSettingsOpen(true)}
+      >
+        <Settings2 size={60} />
       </button>
 
       <div className="actions">
@@ -113,6 +120,13 @@ export function GameActions({ players }: Props) {
           <img src={Dice} alt="Dice" />
         </button>
       </div>
+
+      {isSettingsOpen && (
+        <GameSettings
+          playerIds={players}
+          onClose={() => setIsSettingsOpen(false)}
+        />
+      )}
     </div>
   )
 }

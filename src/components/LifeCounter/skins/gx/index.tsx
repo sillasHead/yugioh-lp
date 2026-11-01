@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import gauge from '../../../../assets/gauge.png'
 import type { CounterSkinProps } from '../../types'
 import './style.css'
@@ -6,6 +7,9 @@ export function GxCounter({
   value,
   lifePointsPercentage,
   direction,
+  name,
+  wins,
+  losses,
 }: CounterSkinProps) {
   const scaleX = direction === 'left' ? -1 : 1
 
@@ -14,9 +18,19 @@ export function GxCounter({
       <img className="gx-counter-art" src={gauge} alt="" />
       <div
         className="gx-counter-score bungee-spice-regular"
-        style={{ transform: `scaleX(${scaleX})` }}
+        style={{
+          transform: `scaleX(${scaleX})`,
+          '--score-length': String(value).length,
+        } as CSSProperties}
       >
         {value}
+      </div>
+      <div
+        className="gx-counter-player"
+        style={{ transform: `scaleX(${scaleX})` }}
+      >
+        <span className="gx-counter-name">{name}</span>
+        <span className="gx-counter-record">V {wins} · D {losses}</span>
       </div>
 
       <div className="gx-counter-life-bar">

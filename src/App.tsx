@@ -5,8 +5,8 @@ import { MultiLifeProvider } from './hooks/LifeProvider'
 import type { Player } from './types/life-provider'
 
 const players: Player[] = [
-  { id: 'player-1', initialLifePoints: 12000 },
-  { id: 'player-2', initialLifePoints: 12000 },
+  { id: 'player-1', name: 'Jogador 1', initialLifePoints: 12000 },
+  { id: 'player-2', name: 'Jogador 2', initialLifePoints: 12000 },
 ]
 
 function App() {
