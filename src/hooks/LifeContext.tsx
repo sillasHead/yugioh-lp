@@ -1,14 +1,11 @@
 import { createContext, useContext } from 'react'
+import type { MultiLifeContextType } from '../types/life-context'
 
-type LifeContextType = {
-  lifePoints: number
-  displayedLifePoints: number
-  lifePointsPercentage: number
-  hit: (amount: number) => void
-  heal: (amount: number) => void
-  reset: () => void
+export const LifeContext = createContext<MultiLifeContextType>({ players: {} })
+
+export const useLife = (playerId: string) => {
+  const context = useContext(LifeContext)
+  const player = context.players[playerId]
+  if (!player) throw new Error(`No life state found for playerId: ${playerId}`)
+  return player
 }
-
-export const LifeContext = createContext<LifeContextType>({} as LifeContextType)
-
-export const useLife = () => useContext(LifeContext)

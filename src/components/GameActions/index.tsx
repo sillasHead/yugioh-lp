@@ -4,32 +4,41 @@ import CoinToss from '../../assets/coin/coin-toss.svg'
 import Face from '../../assets/coin/face.png'
 import Tail from '../../assets/coin/tail.png'
 
-import { RefreshCcw } from 'lucide-react'
-import One from '../../assets/dice/dice-1.svg'
-import Two from '../../assets/dice/dice-2.svg'
-import Three from '../../assets/dice/dice-3.svg'
-import Four from '../../assets/dice/dice-4.svg'
-import Five from '../../assets/dice/dice-5.svg'
-import Six from '../../assets/dice/dice-6.svg'
+import { RefreshCcw, Undo2 } from 'lucide-react'
+import Dice1 from '../../assets/dice/dice-1.svg'
+import Dice2 from '../../assets/dice/dice-2.svg'
+import Dice3 from '../../assets/dice/dice-3.svg'
+import Dice4 from '../../assets/dice/dice-4.svg'
+import Dice5 from '../../assets/dice/dice-5.svg'
+import Dice6 from '../../assets/dice/dice-6.svg'
 import Dice from '../../assets/dice/dice.svg'
+import { useLife } from '../../hooks/LifeContext'
 import './style.css'
 
 type Props = {
-  resetBoth: () => void
+  players: string[]
 }
 
-export default function GameActions({ resetBoth }: Props) {
+export function GameActions({ players }: Props) {
+  const p1 = useLife(players[0])
+  const p2 = useLife(players[1])
+
+  const isThereHistory = p1.isLastOnHistory() || p2.isLastOnHistory()
+
   const delay = 1250
 
   const tailRef = useRef<HTMLImageElement>(null)
   const faceRef = useRef<HTMLImageElement>(null)
 
-  const oneRef = useRef<HTMLImageElement>(null)
-  const twoRef = useRef<HTMLImageElement>(null)
-  const threeRef = useRef<HTMLImageElement>(null)
-  const fourRef = useRef<HTMLImageElement>(null)
-  const fiveRef = useRef<HTMLImageElement>(null)
-  const sixRef = useRef<HTMLImageElement>(null)
+  const diceRefs = Array.from({ length: 6 }, () =>
+    useRef<HTMLImageElement>(null),
+  )
+  const diceImages = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6]
+
+  function resetLifePoints() {
+    p1.reset()
+    p2.reset()
+  }
 
   function handleCoinToss() {
     const randomNumber = Math.floor(Math.random() * 2)
@@ -52,47 +61,23 @@ export default function GameActions({ resetBoth }: Props) {
   }
 
   function handleDiceRoll() {
-    const randomNumber = Math.floor(Math.random() * 6) + 1
+    const randomIndex = Math.floor(Math.random() * 6)
+    const ref = diceRefs[randomIndex]
 
-    switch (randomNumber) {
-      case 1:
-        oneRef.current?.classList.add('active-dice')
-        setTimeout(() => {
-          oneRef.current?.classList.remove('active-dice')
-        }, delay)
-        break
-      case 2:
-        twoRef.current?.classList.add('active-dice')
-        setTimeout(() => {
-          twoRef.current?.classList.remove('active-dice')
-        }, delay)
-        break
-      case 3:
-        threeRef.current?.classList.add('active-dice')
-        setTimeout(() => {
-          threeRef.current?.classList.remove('active-dice')
-        }, delay)
-        break
-      case 4:
-        fourRef.current?.classList.add('active-dice')
-        setTimeout(() => {
-          fourRef.current?.classList.remove('active-dice')
-        }, delay)
-        break
-      case 5:
-        fiveRef.current?.classList.add('active-dice')
-        setTimeout(() => {
-          fiveRef.current?.classList.remove('active-dice')
-        }, delay)
-        break
-      case 6:
-        sixRef.current?.classList.add('active-dice')
-        setTimeout(() => {
-          sixRef.current?.classList.remove('active-dice')
-        }, delay)
-        break
+    ref.current?.classList.add('active-dice')
+    setTimeout(() => {
+      ref.current?.classList.remove('active-dice')
+    }, delay)
+  }
+
+  function undo() {
+    if (p1.isLastOnHistory()) {
+      p1.undo()
+    } else if (p2.isLastOnHistory()) {
+      p2.undo()
     }
   }
+
   return (
     <div className="game-actions">
       <div className="actions">
@@ -107,17 +92,24 @@ export default function GameActions({ resetBoth }: Props) {
         </button>
       </div>
 
-      <button type="button" className="reset-game" onClick={resetBoth}>
+      <button type="button" className="reset-game" onClick={resetLifePoints}>
         <RefreshCcw size={60} />
       </button>
 
+      <button type="button" onClick={undo} disabled={!isThereHistory}>
+        <Undo2 size={60} />
+      </button>
+
       <div className="actions">
-        <img className="dice" ref={oneRef} src={One} alt="Dice 1" />
-        <img className="dice" ref={twoRef} src={Two} alt="Dice 2" />
-        <img className="dice" ref={threeRef} src={Three} alt="Dice 3" />
-        <img className="dice" ref={fourRef} src={Four} alt="Dice 4" />
-        <img className="dice" ref={fiveRef} src={Five} alt="Dice 5" />
-        <img className="dice" ref={sixRef} src={Six} alt="Dice 6" />
+        {diceImages.map((img, i) => (
+          <img
+            key={img}
+            className="dice"
+            ref={diceRefs[i]}
+            src={img}
+            alt={`Dice ${i + 1}`}
+          />
+        ))}
         <button
           type="button"
           className="action-button"

@@ -1,33 +1,11 @@
-import { useReducer, useRef } from 'react'
+import { useEffect, useReducer, useRef } from 'react'
+import type { LifeContextType } from '../types/life-context'
+import type { Action, Player, PlayerState, State } from '../types/life-provider'
 import { LifeContext } from './LifeContext'
 
-// ---------- types ----------
-type Props = {
+export type Props = {
   children: React.ReactNode
-  initialLifePoints?: number
-}
-
-type State = {
-  lifePoints: number
-  displayedLifePoints: number
-  animationFrameId: number | null
-  lifePointsPercentage: number
-}
-
-type Action =
-  | { type: 'HIT'; damage: number }
-  | { type: 'HEAL'; amount: number }
-  | { type: 'RESET'; initialLifePoints?: number }
-  | { type: 'SET_DISPLAY'; value: number }
-  | { type: 'SET_FRAME_ID'; id: number | null }
-  | { type: 'APPLY_REAL_VALUE' }
-
-// ---------- initial state ----------
-const initialState: State = {
-  lifePoints: 8000,
-  displayedLifePoints: 8000,
-  animationFrameId: null,
-  lifePointsPercentage: 100,
+  configs: Player[]
 }
 
 // ---------- Reducer ----------
@@ -38,12 +16,15 @@ function reducer(state: State, action: Action): State {
       return {
         ...state,
         lifePoints: newLife,
-        lifePointsPercentage: (newLife / 8000) * 100,
+        lifePointsPercentage: (newLife / action.initialLifePoints) * 100,
       }
     }
     case 'HEAL': {
       const newLife = state.lifePoints + action.amount
-      const lifePointsPercentage = newLife > 8000 ? 100 : (newLife / 8000) * 100
+      const lifePointsPercentage =
+        newLife > action.initialLifePoints
+          ? 100
+          : (newLife / action.initialLifePoints) * 100
       return {
         ...state,
         lifePoints: newLife,
@@ -53,7 +34,7 @@ function reducer(state: State, action: Action): State {
     case 'RESET': {
       return {
         ...state,
-        lifePoints: action.initialLifePoints ?? 8000,
+        lifePoints: action.initialLifePoints,
         lifePointsPercentage: 100,
       }
     }
@@ -67,75 +48,127 @@ function reducer(state: State, action: Action): State {
         displayedLifePoints: state.lifePoints,
         animationFrameId: null,
       }
+    case 'UNDO': {
+      const raw = localStorage.getItem('states')
+      if (!raw) return state
+
+      const history = JSON.parse(raw) as PlayerState[]
+      const lastState = history.pop()
+      if (!lastState) return state
+
+      const playerState = lastState.state
+      if (!playerState) return state
+
+      localStorage.setItem('states', JSON.stringify(history))
+      return { ...state, ...playerState }
+    }
     default:
       return state
   }
 }
 
-export function LifeProvider({ children, initialLifePoints }: Props) {
-  const [state, dispatch] = useReducer(reducer, {
-    ...initialState,
-    lifePoints: initialLifePoints ?? 8000,
-    displayedLifePoints: initialLifePoints ?? 8000,
-  })
-  const startTimeRef = useRef<number>(0)
-  const delay = 1000
+function createPlayerState(
+  playerId: string,
+  initialLifePoints: number,
+): LifeContextType {
+  const savedLP = localStorage.getItem(playerId)
 
-  // ---------- animation ----------
+  const [state, dispatch] = useReducer(reducer, {
+    animationFrameId: null,
+    lifePointsPercentage: savedLP
+      ? (Number(savedLP) / initialLifePoints) * 100
+      : 100,
+    lifePoints: savedLP ? Number(savedLP) : initialLifePoints,
+    displayedLifePoints: savedLP ? Number(savedLP) : initialLifePoints,
+  })
+
+  const startTimeRef = useRef<number>(0)
+
   function animateVisual(from: number) {
     startTimeRef.current = performance.now()
 
-    // cancels the previous animation
-    if (state.animationFrameId) {
-      cancelAnimationFrame(state.animationFrameId)
-    }
-
     function animate(now: number) {
       const elapsed = now - startTimeRef.current
-
-      if (elapsed >= delay) {
+      if (elapsed >= 1000) {
         dispatch({ type: 'APPLY_REAL_VALUE' })
         return
       }
-
-      const fakeValue = Math.floor(Math.random() * (from + 1))
-      dispatch({ type: 'SET_DISPLAY', value: fakeValue })
-
-      const id = requestAnimationFrame(animate)
-      dispatch({ type: 'SET_FRAME_ID', id })
+      const fake = Math.floor(Math.random() * from)
+      dispatch({ type: 'SET_DISPLAY', value: fake })
+      requestAnimationFrame(animate)
     }
 
-    const id = requestAnimationFrame(animate)
-    dispatch({ type: 'SET_FRAME_ID', id })
+    requestAnimationFrame(animate)
   }
 
-  function hit(damage: number) {
+  function hit(amount: number) {
+    saveSnapshot()
     animateVisual(state.lifePoints)
-    dispatch({ type: 'HIT', damage })
+    dispatch({ type: 'HIT', damage: amount, initialLifePoints })
   }
 
   function heal(amount: number) {
+    saveSnapshot()
     animateVisual(state.lifePoints)
-    dispatch({ type: 'HEAL', amount })
+    dispatch({ type: 'HEAL', amount, initialLifePoints })
   }
 
   function reset() {
+    if (state.lifePoints === initialLifePoints) return
+    localStorage.removeItem(playerId)
+    saveSnapshot()
     animateVisual(state.lifePoints)
-    dispatch({ type: 'RESET' })
+    dispatch({ type: 'RESET', initialLifePoints })
+  }
+
+  function undo() {
+    animateVisual(state.lifePoints)
+    dispatch({ type: 'UNDO', playerId })
+  }
+
+  function saveSnapshot() {
+    const raw = localStorage.getItem('states')
+    const history = raw ? (JSON.parse(raw) as PlayerState[]) : []
+
+    if (history.length > 50) history.shift() // keeps only the last 50 states
+
+    history.push({ playerId, state })
+    localStorage.setItem('states', JSON.stringify(history))
+  }
+
+  function isLastOnHistory(): boolean {
+    const raw = localStorage.getItem('states')
+    if (!raw) return false
+
+    const history = JSON.parse(raw) as PlayerState[]
+    const last = history[history.length - 1]
+    return last?.playerId === playerId
+  }
+
+  useEffect(() => {
+    localStorage.setItem(playerId, String(state.lifePoints))
+  }, [state.lifePoints, playerId])
+
+  return {
+    lifePoints: state.lifePoints,
+    displayedLifePoints: state.displayedLifePoints,
+    lifePointsPercentage: state.lifePointsPercentage,
+    hit,
+    heal,
+    reset,
+    undo,
+    isLastOnHistory,
+  }
+}
+
+export function MultiLifeProvider({ children, configs }: Props) {
+  const players: Record<string, LifeContextType> = {}
+
+  for (const { id, initialLifePoints } of configs) {
+    players[id] = createPlayerState(id, initialLifePoints)
   }
 
   return (
-    <LifeContext.Provider
-      value={{
-        lifePoints: state.lifePoints,
-        displayedLifePoints: state.displayedLifePoints,
-        lifePointsPercentage: state.lifePointsPercentage,
-        hit,
-        heal,
-        reset,
-      }}
-    >
-      {children}
-    </LifeContext.Provider>
+    <LifeContext.Provider value={{ players }}>{children}</LifeContext.Provider>
   )
 }

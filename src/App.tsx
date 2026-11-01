@@ -1,15 +1,18 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import './App.css'
-import GameActions from './components/GameActions'
-import Gauge, { type GaugeHandle } from './components/Gauge'
+import { GameActions } from './components/GameActions'
+import { Gauge } from './components/Gauge'
+import { MultiLifeProvider } from './hooks/LifeProvider'
+import type { Player } from './types/life-provider'
 
 function App() {
-  const player1Ref = useRef<GaugeHandle>(null)
-  const player2Ref = useRef<GaugeHandle>(null)
-
-  function resetBoth() {
-    player1Ref.current?.reset()
-    player2Ref.current?.reset()
+  const p1: Player = {
+    id: 'player-1',
+    initialLifePoints: 12000,
+  }
+  const p2: Player = {
+    id: 'player-2',
+    initialLifePoints: 12000,
   }
 
   // visible viewport height for mobile devices
@@ -28,19 +31,36 @@ function App() {
 
   return (
     <div className="container">
-      <Gauge
-        ref={player1Ref}
-        initialLifePoints={8000}
-        playerDirection="left"
-        player="player-1"
-      />
-      <GameActions resetBoth={resetBoth} />
-      <Gauge
-        ref={player2Ref}
-        initialLifePoints={8000}
-        playerDirection="right"
-        player="player-2"
-      />
+      <MultiLifeProvider configs={[p1, p2]}>
+        <Gauge playerDirection="left" playerId={p1.id} otherPlayer={p2.id} />
+        <GameActions players={[p1.id, p2.id]} />
+        <Gauge playerDirection="right" playerId={p2.id} otherPlayer={p1.id} />
+      </MultiLifeProvider>
+
+      {/* <div id="myModal" className="modal">
+        <div className="modal-content">
+          <h2>Initial Life Points</h2>
+
+          {lpOptions.map((value) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => onSelectLifePoints(value)}
+            >
+              {value}
+            </button>
+          ))}
+          <div className="custom">
+            <input ref={customRef} type="text" placeholder="Custom" />
+            <Check
+              size={32}
+              onClick={() =>
+                onSelectLifePoints(Number(customRef.current?.value))
+              }
+            />
+          </div>
+        </div>
+      </div> */}
     </div>
   )
 }

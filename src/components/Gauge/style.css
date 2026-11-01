@@ -122,6 +122,22 @@
   }
 }
 
+.victories-counter {
+  text-align: right;
+  position: absolute;
+  top: 67%;
+  left: 30%;
+  font-size: calc(var(--gauge-size) / 22.75);
+  width: calc(var(--gauge-size) / 1.9);
+  background-color: transparent;
+  border: none;
+  letter-spacing: -2.5px;
+
+  &:focus {
+    outline: none;
+  }
+}
+
 @keyframes count-color {
   0% {
     color: white;
