@@ -1,0 +1,71 @@
+:root {
+  --counter-size: clamp(240px, 28vw, 500px);
+}
+
+.life-counter {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.5vh, 18px);
+}
+
+.life-actions {
+  display: grid;
+  width: min(100%, 460px);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(4px, 0.6vw, 8px);
+}
+
+.life-actions button {
+  min-width: 0;
+  padding: 0.55em 0.35em;
+  white-space: nowrap;
+}
+
+.reset {
+  grid-column: 2 / span 2;
+  justify-self: stretch;
+}
+
+@media (max-width: 900px) {
+  :root {
+    --counter-size: clamp(180px, 22vw, 260px);
+  }
+
+  .life-actions {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --counter-size: clamp(150px, 46vw, 205px);
+  }
+
+  .life-counter {
+    flex: 1 1 0;
+    width: 100%;
+    min-height: 0;
+    gap: clamp(6px, 1vh, 10px);
+  }
+
+  .life-actions {
+    width: min(94vw, 390px);
+    gap: 4px;
+  }
+
+  .life-actions button {
+    padding: 0.45em 0.15em;
+    font-size: clamp(0.8rem, 3.7vw, 0.95rem);
+  }
+
+  .reset {
+    display: none;
+  }
+
+  .player-1 {
+    transform: rotate(180deg);
+  }
+}

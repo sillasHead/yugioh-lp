@@ -1,0 +1,105 @@
+.gx-counter {
+  position: relative;
+  flex: none;
+  line-height: 0;
+}
+
+.gx-counter-art {
+  display: block;
+  width: var(--counter-size);
+  height: auto;
+}
+
+.gx-counter-score {
+  position: absolute;
+  top: 34%;
+  left: 32%;
+  width: 47%;
+  font-size: clamp(2rem, calc(var(--counter-size) / 7.75), 4.25rem);
+  line-height: 1.2;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.gx-counter-life-bar {
+  position: absolute;
+  top: 23.9%;
+  left: 11.5%;
+  display: flex;
+  width: calc(var(--counter-size) / 7.85);
+  height: calc(var(--counter-size) / 2.01);
+  flex-direction: column;
+  overflow: hidden;
+  background:
+    url('../../../../assets/noise-texture.png'),
+    linear-gradient(to bottom, #2c3e50, #1a252f);
+  background-blend-mode: overlay;
+  background-size: cover;
+  background-color: #171612;
+}
+
+.gx-counter-segment {
+  width: 100%;
+  height: 12.5%;
+  padding: 1.5px 3px;
+}
+
+.gx-counter-segment:nth-child(2) {
+  padding-top: 3px;
+}
+
+.gx-counter-segment:last-child {
+  padding-bottom: 3px;
+}
+
+.gx-counter-color {
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  background:
+    url('../../../../assets/noise.png'),
+    linear-gradient(to bottom, #2c3e50, #1a252f);
+  background-blend-mode: overlay;
+  background-size: cover;
+}
+
+.gx-counter-empty-bar {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-height: 100%;
+  pointer-events: none;
+  border-radius: 2px;
+  background:
+    url('../../../../assets/noise-texture.png'),
+    linear-gradient(to bottom, #2c3e50, #1a252f);
+  background-blend-mode: overlay;
+  background-size: cover;
+  background-color: #171612;
+  transition: height 700ms ease-out;
+}
+
+.gx-counter-color-1 { background-color: #0721cf; }
+.gx-counter-color-2 { background-color: #2482d8; }
+.gx-counter-color-3 { background-color: #36c5dc; }
+.gx-counter-color-4 { background-color: #58ea39; }
+.gx-counter-color-5 { background-color: #dfec29; }
+.gx-counter-color-6 { background-color: #f5d930; }
+.gx-counter-color-7 { background-color: #ee8224; }
+.gx-counter-color-8 { background-color: #a9171f; }
+
+@media (max-width: 600px) {
+  .gx-counter-segment {
+    padding: 1px 1.5px;
+  }
+
+  .gx-counter-segment:nth-child(2) {
+    padding-top: 1.5px;
+  }
+
+  .gx-counter-segment:last-child {
+    padding-bottom: 1.5px;
+  }
+}
