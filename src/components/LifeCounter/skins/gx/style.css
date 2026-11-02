@@ -36,19 +36,16 @@
   0% {
     opacity: 0;
     filter: brightness(3) drop-shadow(0 0 14px #ffe58a);
-    clip-path: inset(0 100% 0 0);
   }
 
   65% {
     opacity: 1;
     filter: brightness(1.8) drop-shadow(0 0 10px #ffe58a);
-    clip-path: inset(0 0 0 0);
   }
 
   100% {
     opacity: 1;
     filter: none;
-    clip-path: inset(0 0 0 0);
   }
 }
 
@@ -56,15 +53,11 @@
   0% {
     opacity: 0;
     filter: brightness(2.5) drop-shadow(0 0 12px #ff321e);
-    clip-path: inset(0 0 100% 0);
-    letter-spacing: 0.16em;
   }
 
   45% {
     opacity: 1;
     filter: brightness(1.8) drop-shadow(0 0 8px #ff321e);
-    clip-path: inset(0 0 0 0);
-    letter-spacing: 0.04em;
   }
 
   65% {
@@ -75,8 +68,6 @@
   100% {
     opacity: 1;
     filter: none;
-    letter-spacing: normal;
-    clip-path: inset(0 0 0 0);
   }
 }
 

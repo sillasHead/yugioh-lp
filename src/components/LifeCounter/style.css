@@ -87,7 +87,7 @@
   }
 
   .life-actions {
-    width: min(94vw, 390px);
+    width: min(90vw, 370px);
     gap: 4px;
   }
 
@@ -102,5 +102,17 @@
 
   .player-1 {
     transform: rotate(180deg);
+  }
+}
+
+@media (max-width: 600px) and (max-height: 720px) {
+  :root {
+    --counter-size: clamp(180px, min(72vw, 33svh), 240px);
+  }
+}
+
+@media (max-width: 600px) and (max-height: 600px) {
+  .life-counter {
+    flex: none;
   }
 }

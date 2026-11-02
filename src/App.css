@@ -35,12 +35,15 @@
 @media (max-width: 600px) {
   #root {
     min-height: 100svh;
-    padding: max(8px, env(safe-area-inset-top)) 8px
-      max(8px, env(safe-area-inset-bottom));
+    padding: max(12px, env(safe-area-inset-top)) 12px
+      max(12px, env(safe-area-inset-bottom));
   }
 
   .container {
-    min-height: calc(100svh - max(16px, env(safe-area-inset-top) + env(safe-area-inset-bottom)));
+    min-height: calc(
+      100svh - max(12px, env(safe-area-inset-top))
+      - max(12px, env(safe-area-inset-bottom))
+    );
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
