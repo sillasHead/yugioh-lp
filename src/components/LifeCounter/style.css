@@ -75,14 +75,15 @@
 
 @media (max-width: 600px) {
   :root {
-    --counter-size: clamp(150px, min(46vw, 22svh), 205px);
+    --counter-size: clamp(220px, min(78vw, 38svh), 320px);
   }
 
   .life-counter {
     flex: 1 1 0;
     width: 100%;
     min-height: 0;
-    gap: clamp(6px, 1vh, 10px);
+    justify-content: flex-start;
+    gap: 2px;
   }
 
   .life-actions {

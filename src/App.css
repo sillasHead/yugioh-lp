@@ -44,6 +44,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    gap: 4px;
+    gap: clamp(12px, 2svh, 16px);
   }
 }

@@ -185,6 +185,25 @@
 .gx-counter-color-8 { background-color: #a9171f; }
 
 @media (max-width: 600px) {
+  .gx-counter-art {
+    height: calc(var(--counter-size) * 0.76);
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .gx-counter-score {
+    top: 31.6%;
+  }
+
+  .gx-counter-player {
+    top: 71%;
+    height: 10.5%;
+  }
+
+  .gx-counter-life-bar {
+    top: 15.7%;
+  }
+
   .gx-counter-segment {
     padding: 1px 1.5px;
   }

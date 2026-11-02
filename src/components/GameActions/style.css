@@ -88,19 +88,19 @@
     width: min(94vw, 390px);
     flex-direction: row;
     justify-content: center;
-    gap: clamp(8px, 2.4vw, 14px);
+    gap: clamp(4px, 1.8vw, 10px);
   }
 
   .game-actions > button,
   .game-actions > .actions {
-    width: clamp(52px, 15vw, 68px);
-    flex: 0 1 68px;
+    width: clamp(44px, 12.5vw, 58px);
+    flex: 0 1 auto;
     padding: 0;
   }
 
   .game-actions > .actions {
-    width: clamp(44px, 12vw, 52px);
-    flex: 0 1 52px;
+    width: clamp(44px, 11vw, 48px);
+    flex: 0 1 auto;
   }
 
   .game-actions > button .reset-game-spinner svg {
@@ -124,15 +124,15 @@
 
   .coin,
   .dice {
-    width: 48%;
-    height: 48%;
+    width: 56%;
+    height: 56%;
   }
 
   .active-coin {
-    transform: translate(-50%, -240%) rotate(360deg);
+    transform: translate(-220%, -50%) rotate(360deg);
   }
 
   .active-dice {
-    transform: translate(-50%, 150%) rotate(-360deg);
+    transform: translate(140%, -50%) rotate(-360deg);
   }
 }
