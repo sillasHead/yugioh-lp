@@ -77,8 +77,9 @@
 }
 
 .settings-player {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  align-items: end;
   gap: 12px;
   margin: 14px 0;
   padding: 14px;

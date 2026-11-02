@@ -29,7 +29,7 @@
   animation: reset-game-spin 7s linear infinite;
 }
 
-.reset-game-spinner svg {
+.game-actions > button .reset-game-spinner svg {
   width: 60%;
   height: 60%;
 }
@@ -103,7 +103,7 @@
     flex: 0 1 52px;
   }
 
-  .reset-game-spinner svg {
+  .game-actions > button .reset-game-spinner svg {
     width: 40%;
     height: 40%;
   }
