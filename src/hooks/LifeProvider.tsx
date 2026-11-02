@@ -65,6 +65,7 @@ function isMatchResult(value: unknown): value is MatchResult {
 function readStoredSettings(configs: Player[]): StoredSettings {
   const defaultSettings: StoredSettings = {
     initialLifePoints: configs[0]?.initialLifePoints ?? 12000,
+    rollMode: 'quick',
     profiles: Object.fromEntries(
       configs.map((player) => [
         player.id,
@@ -95,6 +96,7 @@ function readStoredSettings(configs: Player[]): StoredSettings {
 
     return {
       initialLifePoints,
+      rollMode: candidate.rollMode === 'arena' ? 'arena' : 'quick',
       profiles: Object.fromEntries(
         configs.map((player) => [
           player.id,
@@ -210,6 +212,7 @@ function initializeState(configs: Player[]): GameState {
     players,
     profiles,
     initialLifePoints: settings.initialLifePoints,
+    rollMode: settings.rollMode,
     result: settings.result,
     history,
   }
@@ -246,6 +249,11 @@ function reducer(state: GameState, action: Action): GameState {
   if (action.type === 'SET_SETTINGS') {
     const pointsChanged =
       action.settings.initialLifePoints !== state.initialLifePoints
+    const profilesChanged = Object.keys(state.profiles).some((id) => {
+      const before = state.profiles[id]
+      const after = action.settings.profiles[id]
+      return !after || before.name !== after.name || before.wins !== after.wins || before.losses !== after.losses
+    })
     const players = pointsChanged
       ? Object.fromEntries(
           Object.keys(state.players).map((id) => [
@@ -264,8 +272,9 @@ function reducer(state: GameState, action: Action): GameState {
       players,
       profiles: action.settings.profiles,
       initialLifePoints: action.settings.initialLifePoints,
+      rollMode: action.settings.rollMode,
       result: pointsChanged ? null : state.result,
-      history: [],
+      history: pointsChanged || profilesChanged ? [] : state.history,
     }
   }
 
@@ -401,6 +410,7 @@ export function MultiLifeProvider({ children, configs }: Props) {
         SETTINGS_KEY,
         JSON.stringify({
           initialLifePoints: state.initialLifePoints,
+          rollMode: state.rollMode,
           profiles: state.profiles,
           result: state.result,
         }),
@@ -413,6 +423,7 @@ export function MultiLifeProvider({ children, configs }: Props) {
     lifePointsStorage,
     state.history,
     state.initialLifePoints,
+    state.rollMode,
     state.profiles,
     state.result,
   ])
@@ -470,9 +481,10 @@ export function MultiLifeProvider({ children, configs }: Props) {
   const settings = useMemo<GameSettings>(
     () => ({
       initialLifePoints: state.initialLifePoints,
+      rollMode: state.rollMode,
       profiles: state.profiles,
     }),
-    [state.initialLifePoints, state.profiles],
+    [state.initialLifePoints, state.rollMode, state.profiles],
   )
   const value = useMemo<MultiLifeContextType>(
     () => ({

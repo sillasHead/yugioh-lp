@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <radialGradient id="gold" cx="0" cy="0" r="1" gradientTransform="translate(65 47) rotate(47) scale(178)"><stop stop-color="#fff3be"/><stop offset=".31" stop-color="#e9bf61"/><stop offset=".67" stop-color="#a66d2d"/><stop offset="1" stop-color="#593314"/></radialGradient>
+    <linearGradient id="edge" x1="22" y1="17" x2="177" y2="180" gradientUnits="userSpaceOnUse"><stop stop-color="#fff1ac"/><stop offset=".27" stop-color="#a36b2b"/><stop offset=".53" stop-color="#f4d57c"/><stop offset=".82" stop-color="#764318"/><stop offset="1" stop-color="#ffe89d"/></linearGradient>
+    <radialGradient id="field" cx="0" cy="0" r="1" gradientTransform="translate(77 70) rotate(51) scale(112)"><stop stop-color="#514527"/><stop offset="1" stop-color="#181c19"/></radialGradient>
+    <linearGradient id="relief" x1="59" y1="47" x2="143" y2="151" gradientUnits="userSpaceOnUse"><stop stop-color="#fff2bc"/><stop offset=".38" stop-color="#e4b95f"/><stop offset=".72" stop-color="#b47a34"/><stop offset="1" stop-color="#75471f"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity=".55"/></filter>
+    <filter id="emboss"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#000" flood-opacity=".5"/></filter>
+  </defs>
+  <circle cx="100" cy="100" r="95" fill="url(#edge)" stroke="#ffe7a2" stroke-width="2" filter="url(#shadow)"/>
+  <circle cx="100" cy="100" r="87" fill="url(#gold)" stroke="#6d411e" stroke-width="2"/>
+  <circle cx="100" cy="100" r="75" fill="url(#field)" stroke="#f3d281" stroke-width="2.5"/>
+  <circle cx="100" cy="100" r="68" stroke="#a47b42" stroke-width="1" stroke-dasharray="2 5"/>
+  <path d="M117 42H91L75 48 67 56 61 69v15l-9 16v5l9 4-2 7 4 2v15l4 3 17-2 5 5 5 17 44-23-2-22 9-22 2-19-6-12-8-8Z" fill="url(#relief)" stroke="#ffe7a1" stroke-width="2.3" stroke-linejoin="round" filter="url(#emboss)"/>
+  <path d="M77 63c16-15 39-17 56-6M75 85l11-3 9 3M69 125l15-2m15 16 24-13" stroke="#fff3c2" stroke-opacity=".67" stroke-width="2" stroke-linecap="round"/>
+  <path d="m64 101 12 3m-8 11 12-1m22 16 20-7" stroke="#71451f" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/>
+  <path d="M32 100h17m102 0h17" stroke="#f5d88d" stroke-width="3" stroke-linecap="round"/>
+  <path d="m61 48 8 10m70-10-8 10m-70 95 8-10m70 10-8-10" stroke="#b48345" stroke-width="3" stroke-linecap="round"/>
+</svg>

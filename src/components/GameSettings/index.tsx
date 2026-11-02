@@ -13,6 +13,7 @@ export function GameSettings({ playerIds, onClose }: Props) {
   const { saveSettings, settings } = useGameLife()
   const [draft, setDraft] = useState<GameSettings>(() => ({
     initialLifePoints: settings.initialLifePoints,
+    rollMode: settings.rollMode,
     profiles: Object.fromEntries(
       playerIds.map((id) => [id, { ...settings.profiles[id] }]),
     ),
@@ -100,7 +101,7 @@ export function GameSettings({ playerIds, onClose }: Props) {
         </label>
         <p className="settings-note">
           Alterar os LP iniciais reinicia os pontos atuais. Salvar configurações
-          limpa o histórico de desfazer.
+          de LP ou jogadores limpa o histórico de desfazer.
         </p>
 
         {playerIds.map((playerId, index) => (
@@ -137,6 +138,21 @@ export function GameSettings({ playerIds, onClose }: Props) {
         <p className="settings-note">
           As vitórias são registradas ao terminar uma partida e podem ser ajustadas aqui.
         </p>
+        <fieldset className="settings-roll-mode">
+          <legend>Lançamento de moeda e dado</legend>
+          <label>
+            <input type="radio" name="roll-mode" value="quick"
+              checked={draft.rollMode === 'quick'}
+              onChange={() => setDraft((current) => ({ ...current, rollMode: 'quick' }))} />
+            <span><strong>Rápido</strong><small>O resultado aparece junto ao botão e desaparece.</small></span>
+          </label>
+          <label>
+            <input type="radio" name="roll-mode" value="arena"
+              checked={draft.rollMode === 'arena'}
+              onChange={() => setDraft((current) => ({ ...current, rollMode: 'arena' }))} />
+            <span><strong>Arena</strong><small>A tela escurece e você pode lançar várias vezes.</small></span>
+          </label>
+        </fieldset>
         {error && <p className="settings-error">{error}</p>}
         <div className="settings-footer">
           <button type="button" className="settings-cancel" onClick={onClose}>

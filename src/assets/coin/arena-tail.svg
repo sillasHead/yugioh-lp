@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <radialGradient id="gold" cx="0" cy="0" r="1" gradientTransform="translate(62 45) rotate(47) scale(182)"><stop stop-color="#fff1b3"/><stop offset=".3" stop-color="#e2b65a"/><stop offset=".68" stop-color="#9b622a"/><stop offset="1" stop-color="#583014"/></radialGradient>
+    <linearGradient id="edge" x1="21" y1="18" x2="179" y2="183" gradientUnits="userSpaceOnUse"><stop stop-color="#fff1ac"/><stop offset=".27" stop-color="#a36b2b"/><stop offset=".53" stop-color="#f4d57c"/><stop offset=".82" stop-color="#764318"/><stop offset="1" stop-color="#ffe89d"/></linearGradient>
+    <radialGradient id="field" cx="0" cy="0" r="1" gradientTransform="translate(75 64) rotate(50) scale(115)"><stop stop-color="#47402a"/><stop offset="1" stop-color="#171c1b"/></radialGradient>
+    <linearGradient id="relief" x1="63" y1="50" x2="134" y2="143" gradientUnits="userSpaceOnUse"><stop stop-color="#fff2bc"/><stop offset=".38" stop-color="#e4b95f"/><stop offset=".72" stop-color="#b47a34"/><stop offset="1" stop-color="#75471f"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity=".55"/></filter>
+    <filter id="emboss"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#000" flood-opacity=".5"/></filter>
+  </defs>
+  <circle cx="100" cy="100" r="95" fill="url(#edge)" stroke="#ffe7a2" stroke-width="2" filter="url(#shadow)"/>
+  <circle cx="100" cy="100" r="87" fill="url(#gold)" stroke="#6d411e" stroke-width="2"/>
+  <circle cx="100" cy="100" r="75" fill="url(#field)" stroke="#f3d281" stroke-width="2.5"/>
+  <circle cx="100" cy="100" r="68" stroke="#a47b42" stroke-width="1" stroke-dasharray="2 5"/>
+  <path d="m145 41-20 0-16 3-9 4-8 8-6 16-5 28-6 17-6 6-17 10 4 11 42-8 13-5 8-6 12-25V58l3-8Z" fill="url(#relief)" stroke="#ffe7a1" stroke-width="2.3" stroke-linejoin="round" filter="url(#emboss)"/>
+  <path d="M136 47c-16 17-25 39-33 60-10 20-25 28-45 31" stroke="#fff3c2" stroke-opacity=".7" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="m94 79 26-9m-31 28 31-5m-40 23 25-1m10-46 17-4" stroke="#75491f" stroke-opacity=".6" stroke-width="2" stroke-linecap="round"/>
+  <path d="M31 100h14m111 0h14" stroke="#f5d88d" stroke-width="3" stroke-linecap="round"/>
+  <path d="m56 52 9 9m79-9-9 9m-79 87 9-9m79 9-9-9" stroke="#a98249" stroke-width="3" stroke-linecap="round"/>
+</svg>

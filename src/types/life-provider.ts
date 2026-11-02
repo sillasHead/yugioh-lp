@@ -18,6 +18,7 @@ export type MatchResult = {
 export type GameSettings = {
   initialLifePoints: number
   profiles: Record<string, PlayerProfile>
+  rollMode: 'quick' | 'arena'
 }
 
 export type PlayerLifeState = {
@@ -36,6 +37,7 @@ export type GameState = {
   players: Record<string, PlayerLifeState>
   profiles: Record<string, PlayerProfile>
   initialLifePoints: number
+  rollMode: GameSettings['rollMode']
   result: MatchResult | null
   history: GameSnapshot[]
 }
