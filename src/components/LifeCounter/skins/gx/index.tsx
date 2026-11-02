@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react'
 import { useLayoutEffect, useRef, useState } from 'react'
 import gauge from '../../../../assets/gauge.png'
 import type { CounterSkinProps } from '../../types'
+import { LiquidLifeBar } from './LiquidLifeBar'
 import './style.css'
 
 export function GxCounter({
@@ -80,7 +81,7 @@ export function GxCounter({
       >
         <span className="gx-counter-name">{name}</span>
         <span className="gx-counter-record" aria-label={`Vitórias: ${wins}`}>
-          V {wins}
+          V-{wins}
         </span>
       </div>
 
@@ -92,15 +93,7 @@ export function GxCounter({
         onPointerUp={onLifeBarPointerUp}
         onPointerCancel={onLifeBarPointerCancel}
       >
-        <div
-          className="gx-counter-empty-bar"
-          style={{ height: `${100 - lifePointsPercentage}%` }}
-        />
-        {Array.from({ length: 8 }, (_, index) => (
-          <div className="gx-counter-segment" key={index}>
-            <div className={`gx-counter-color gx-counter-color-${index + 1}`} />
-          </div>
-        ))}
+        <LiquidLifeBar percentage={lifePointsPercentage} />
       </div>
     </div>
   )

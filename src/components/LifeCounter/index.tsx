@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import type { ComponentType, PointerEvent as ReactPointerEvent } from 'react'
 import { createPortal } from 'react-dom'
 import { RefreshCcw } from 'lucide-react'
-import { useLife } from '../../hooks/LifeContext'
+import { useGameLife, useLife } from '../../hooks/LifeContext'
 import { GxCounter } from './skins/gx'
 import { CounterRack } from '../CounterRack'
 import { playResetAnimation } from '../../utils/animations'
@@ -90,6 +90,7 @@ export function LifeCounter({
   playerDirection,
   theme = 'gx',
 }: Props) {
+  const { settings } = useGameLife()
   const {
     lifePoints,
     displayedLifePoints,
@@ -109,6 +110,9 @@ export function LifeCounter({
   const otherPlayerDisplayedLifePoints = otherPlayer.displayedLifePoints
   const matchEnded = lifePoints === 0 || otherPlayer.lifePoints === 0
   const CounterSkin = counterSkins[theme]
+  const previewLifePointsPercentage = adjustmentPreview
+    ? Math.max(0, Math.min(100, ((lifePoints + adjustmentPreview.amount) / settings.initialLifePoints) * 100))
+    : lifePointsPercentage
 
   function handleLifeBarPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
     if (matchEnded || (event.pointerType === 'mouse' && event.button !== 0)) {
@@ -218,7 +222,7 @@ export function LifeCounter({
     <div className={`life-counter ${playerId}`}>
       <CounterSkin
         value={value}
-        lifePointsPercentage={lifePointsPercentage}
+        lifePointsPercentage={previewLifePointsPercentage}
         direction={playerDirection}
         name={name}
         wins={wins}
