@@ -93,7 +93,9 @@ export function GameActions({ players }: Props) {
           resetAll()
         }}
       >
-        <RefreshCcw size={60} />
+        <span className="reset-game-spinner">
+          <RefreshCcw size={60} />
+        </span>
       </button>
 
       <button type="button" onClick={undo} disabled={!canUndo}>

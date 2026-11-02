@@ -21,6 +21,22 @@
   height: 100%;
 }
 
+.reset-game-spinner {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  animation: reset-game-spin 7s linear infinite;
+}
+
+@keyframes reset-game-spin {
+  to { transform: rotate(-360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reset-game-spinner { animation: none; }
+}
+
 .actions {
   position: relative;
   width: 100%;
