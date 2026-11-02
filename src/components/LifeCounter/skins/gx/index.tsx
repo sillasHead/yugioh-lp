@@ -19,7 +19,7 @@ export function GxCounter({
       <div
         className="gx-counter-score bungee-spice-regular"
         style={{
-          transform: `scaleX(${scaleX})`,
+          transform: `scaleX(${scaleX}) scaleY(2.5)`,
           '--score-length': String(value).length,
         } as CSSProperties}
       >

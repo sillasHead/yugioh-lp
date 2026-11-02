@@ -12,7 +12,7 @@
 
 .gx-counter-score {
   position: absolute;
-  top: 34%;
+  top: 36%;
   left: 32%;
   width: 47%;
   font-size: min(
@@ -26,7 +26,7 @@
 
 .gx-counter-player {
   position: absolute;
-  top: 68%;
+  top: 66%;
   left: 29%;
   display: flex;
   width: 53%;
