@@ -108,6 +108,12 @@
     height: 68%;
   }
 
+  .game-actions > .undo-game svg,
+  .game-actions > .settings-game svg {
+    width: 88%;
+    height: 88%;
+  }
+
   .actions > .action-button {
     position: absolute;
     inset: 0;

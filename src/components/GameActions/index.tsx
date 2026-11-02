@@ -85,7 +85,12 @@ export function GameActions({ players }: Props) {
         </button>
       </div>
 
-      <button type="button" onClick={undo} disabled={!canUndo}>
+      <button
+        type="button"
+        className="undo-game"
+        onClick={undo}
+        disabled={!canUndo}
+      >
         <Undo2 size={60} />
       </button>
 
