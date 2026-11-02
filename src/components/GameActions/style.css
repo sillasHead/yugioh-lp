@@ -30,8 +30,8 @@
 }
 
 .reset-game-spinner svg {
-  width: 88%;
-  height: 88%;
+  width: 60%;
+  height: 60%;
 }
 
 @keyframes reset-game-spin {
@@ -93,8 +93,8 @@
 
   .game-actions > button,
   .game-actions > .actions {
-    width: clamp(48px, 14vw, 60px);
-    flex: 0 1 60px;
+    width: clamp(44px, 12vw, 52px);
+    flex: 0 0 clamp(44px, 12vw, 52px);
     padding: 0;
   }
 
