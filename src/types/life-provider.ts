@@ -22,7 +22,7 @@ export type GameSettings = {
 
 export type PlayerLifeState = {
   lifePoints: number
-  displayedLifePoints: number
+  displayedLifePoints: number | string
   lifePointsPercentage: number
 }
 
@@ -43,15 +43,10 @@ export type GameState = {
 export type Action =
   | { type: 'HIT'; playerId: string; amount: number }
   | { type: 'HEAL'; playerId: string; amount: number }
-  | {
-      type: 'ADJUST_LP'
-      playerId: string
-      amount: number
-      recordHistory: boolean
-    }
+  | { type: 'ADJUST_LP'; playerId: string; amount: number }
   | { type: 'RESET'; playerId: string }
   | { type: 'RESET_ALL' }
-  | { type: 'SET_DISPLAY'; playerId: string; value: number }
+  | { type: 'SET_DISPLAY'; playerId: string; value: number | string }
   | { type: 'APPLY_REAL_VALUE'; playerId: string }
   | { type: 'SET_SETTINGS'; settings: GameSettings }
   | { type: 'UNDO' }

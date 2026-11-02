@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import gauge from '../../../../assets/gauge.png'
 import type { CounterSkinProps } from '../../types'
@@ -13,20 +14,60 @@ export function GxCounter({
   onLifeBarPointerDown,
   onLifeBarPointerMove,
   onLifeBarPointerUp,
+  onLifeBarPointerCancel,
 }: CounterSkinProps) {
   const scaleX = direction === 'left' ? -1 : 1
+  const isWin = value === 'win'
+  const scoreLength = String(value).length
+  const [scoreOverride, setScoreOverride] = useState<string | null>(null)
+  const wasWin = useRef(isWin)
+
+  useLayoutEffect(() => {
+    if (isWin) {
+      wasWin.current = true
+      setScoreOverride(null)
+      return
+    }
+
+    const returningFromWin = wasWin.current && !isWin
+    wasWin.current = isWin
+
+    if (!returningFromWin) return
+
+    const startedAt = performance.now()
+    let animationFrame = 0
+    const randomScore = () =>
+      Array.from({ length: scoreLength }, () => Math.floor(Math.random() * 10)).join('')
+
+    setScoreOverride(randomScore())
+
+    function scramble(now: number) {
+      if (now - startedAt >= 1000) {
+        setScoreOverride(null)
+        return
+      }
+
+      setScoreOverride(randomScore())
+      animationFrame = requestAnimationFrame(scramble)
+    }
+
+    animationFrame = requestAnimationFrame(scramble)
+    return () => cancelAnimationFrame(animationFrame)
+  }, [isWin, scoreLength])
+
+  const displayedValue = scoreOverride ?? value
 
   return (
     <div className="gx-counter" style={{ transform: `scaleX(${scaleX})` }}>
       <img className="gx-counter-art" src={gauge} alt="" />
       <div
-        className="gx-counter-score bungee-spice-regular"
+        className={`gx-counter-score bungee-spice-regular${displayedValue === 'win' ? ' is-win' : displayedValue === 'loser' ? ' is-loser' : ''}`}
         style={{
           transform: `scaleX(${scaleX}) scaleY(2.5)`,
-          '--score-length': String(value).length,
+          '--score-length': String(displayedValue).length,
         } as CSSProperties}
       >
-        {value}
+        {displayedValue}
       </div>
       <div
         className="gx-counter-player"
@@ -42,7 +83,7 @@ export function GxCounter({
         onPointerDown={onLifeBarPointerDown}
         onPointerMove={onLifeBarPointerMove}
         onPointerUp={onLifeBarPointerUp}
-        onPointerCancel={onLifeBarPointerUp}
+        onPointerCancel={onLifeBarPointerCancel}
       >
         <div
           className="gx-counter-empty-bar"

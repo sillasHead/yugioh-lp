@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useRef } from 'react'
+import { useEffect, useMemo, useReducer } from 'react'
 import type { LifeContextType, MultiLifeContextType } from '../types/life-context'
 import type {
   Action,
@@ -11,6 +11,7 @@ import type {
   PlayerProfile,
 } from '../types/life-provider'
 import { LifeContext } from './LifeContext'
+import { useLifePointAnimation } from './useLifePointAnimation'
 
 export type Props = {
   children: React.ReactNode
@@ -18,7 +19,6 @@ export type Props = {
 }
 
 const HISTORY_LIMIT = 50
-const ANIMATION_DURATION = 1000
 const SETTINGS_KEY = 'duel-settings'
 
 type StoredSettings = GameSettings & { result: MatchResult | null }
@@ -330,17 +330,13 @@ function reducer(state: GameState, action: Action): GameState {
     lifePoints = state.initialLifePoints
   }
 
-  const nextHistory =
-    action.type === 'ADJUST_LP' && !action.recordHistory
-      ? state.history
-      : [
-          ...state.history.slice(-(HISTORY_LIMIT - 1)),
-          createSnapshot(state),
-        ]
+  const nextHistory = [
+    ...state.history.slice(-(HISTORY_LIMIT - 1)),
+    createSnapshot(state),
+  ]
   const nextPlayer: PlayerLifeState = {
     lifePoints,
-    displayedLifePoints:
-      action.type === 'ADJUST_LP' ? lifePoints : player.displayedLifePoints,
+    displayedLifePoints: player.displayedLifePoints,
     lifePointsPercentage: toLifePercentage(lifePoints, state.initialLifePoints),
   }
   if (action.type === 'ADJUST_LP' && lifePoints === player.lifePoints) {
@@ -389,41 +385,7 @@ function reducer(state: GameState, action: Action): GameState {
 
 export function MultiLifeProvider({ children, configs }: Props) {
   const [state, dispatch] = useReducer(reducer, configs, initializeState)
-  const animationFrames = useRef(new Map<string, number>())
-  const animationStarts = useRef(new Map<string, number>())
-
-  function animateVisual(playerId: string, from: number) {
-    const previousFrame = animationFrames.current.get(playerId)
-    if (previousFrame !== undefined) cancelAnimationFrame(previousFrame)
-    animationStarts.current.set(playerId, performance.now())
-
-    function animate(now: number) {
-      const startedAt = animationStarts.current.get(playerId) ?? now
-      if (now - startedAt >= ANIMATION_DURATION) {
-        animationFrames.current.delete(playerId)
-        dispatch({ type: 'APPLY_REAL_VALUE', playerId })
-        return
-      }
-
-      dispatch({
-        type: 'SET_DISPLAY',
-        playerId,
-        value: Math.floor(Math.random() * (from + 1)),
-      })
-      animationFrames.current.set(playerId, requestAnimationFrame(animate))
-    }
-
-    animationFrames.current.set(playerId, requestAnimationFrame(animate))
-  }
-
-  useEffect(
-    () => () => {
-      for (const frame of animationFrames.current.values()) {
-        cancelAnimationFrame(frame)
-      }
-    },
-    [],
-  )
+  const { animateVisual, cancelAll } = useLifePointAnimation(dispatch)
 
   const lifePointsStorage = configs
     .map(({ id }) => `${id}:${state.players[id]?.lifePoints ?? 0}`)
@@ -463,30 +425,35 @@ export function MultiLifeProvider({ children, configs }: Props) {
         ...player,
         ...profile,
         hit: (amount) => {
-          animateVisual(id, player.lifePoints)
+          animateVisual(id, player.lifePoints, Math.max(0, player.lifePoints - amount))
           dispatch({ type: 'HIT', playerId: id, amount })
         },
         heal: (amount) => {
-          animateVisual(id, player.lifePoints)
+          animateVisual(id, player.lifePoints, player.lifePoints + amount)
           dispatch({ type: 'HEAL', playerId: id, amount })
         },
-        adjust: (amount, recordHistory) =>
+        adjust: (amount) => {
+          animateVisual(id, player.lifePoints, Math.max(0, player.lifePoints + amount))
           dispatch({
             type: 'ADJUST_LP',
             playerId: id,
             amount,
-            recordHistory,
-          }),
+          })
+        },
         reset: () => {
           if (state.result) {
             for (const [playerId, currentPlayer] of Object.entries(state.players)) {
-              animateVisual(playerId, currentPlayer.lifePoints)
+              animateVisual(
+                playerId,
+                currentPlayer.lifePoints,
+                state.initialLifePoints,
+              )
             }
             dispatch({ type: 'RESET_ALL' })
             return
           }
           if (player.lifePoints === state.initialLifePoints) return
-          animateVisual(id, player.lifePoints)
+          animateVisual(id, player.lifePoints, state.initialLifePoints)
           dispatch({ type: 'RESET', playerId: id })
         },
       }
@@ -507,8 +474,14 @@ export function MultiLifeProvider({ children, configs }: Props) {
     () => ({
       players,
       settings,
-      saveSettings: (nextSettings) =>
-        dispatch({ type: 'SET_SETTINGS', settings: nextSettings }),
+      saveSettings: (nextSettings) => {
+        if (nextSettings.initialLifePoints !== state.initialLifePoints) {
+          for (const [id, player] of Object.entries(state.players)) {
+            animateVisual(id, player.lifePoints, nextSettings.initialLifePoints)
+          }
+        }
+        dispatch({ type: 'SET_SETTINGS', settings: nextSettings })
+      },
       resetAll: () => {
         if (
           !state.result &&
@@ -519,21 +492,39 @@ export function MultiLifeProvider({ children, configs }: Props) {
           return
         }
         for (const [id, player] of Object.entries(state.players)) {
-          animateVisual(id, player.lifePoints)
+          animateVisual(id, player.lifePoints, state.initialLifePoints)
         }
         dispatch({ type: 'RESET_ALL' })
       },
       canUndo,
       undo: () => {
-        for (const frame of animationFrames.current.values()) {
-          cancelAnimationFrame(frame)
-        }
-        animationFrames.current.clear()
-        animationStarts.current.clear()
+        const previous = state.history[state.history.length - 1]
+        if (!previous) return
+
+        cancelAll()
         dispatch({ type: 'UNDO' })
+        for (const [id, player] of Object.entries(state.players)) {
+          if (previous.players[id]?.lifePoints !== player.lifePoints) {
+            animateVisual(
+              id,
+              player.lifePoints,
+              previous.players[id]?.lifePoints ?? player.lifePoints,
+            )
+          }
+        }
       },
     }),
-    [players, settings, canUndo, state.players, state.result, state.initialLifePoints],
+    [
+      players,
+      settings,
+      canUndo,
+      state.players,
+      state.result,
+      state.initialLifePoints,
+      state.history,
+      animateVisual,
+      cancelAll,
+    ],
   )
 
   return <LifeContext.Provider value={value}>{children}</LifeContext.Provider>

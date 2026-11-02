@@ -24,6 +24,30 @@
   white-space: nowrap;
 }
 
+.life-adjustment-preview {
+  position: fixed;
+  z-index: 30;
+  padding: 8px 12px;
+  transform: translate(-50%, -125%);
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: #171717;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 45%);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.life-adjustment-preview.is-gain {
+  color: #6ee7a1;
+}
+
+.life-adjustment-preview.is-loss {
+  color: #ff7878;
+}
+
 .reset {
   grid-column: 2 / span 2;
   justify-self: stretch;

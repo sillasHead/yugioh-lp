@@ -1,5 +1,6 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import type { ComponentType, PointerEvent as ReactPointerEvent } from 'react'
+import { createPortal } from 'react-dom'
 import { RefreshCcw } from 'lucide-react'
 import { useLife } from '../../hooks/LifeContext'
 import { GxCounter } from './skins/gx'
@@ -18,17 +19,30 @@ const counterSkins: Record<CounterTheme, ComponentType<CounterSkinProps>> = {
 }
 
 const lifeActions = [50, 100, 500, 1000]
-const adjustmentSteps = [1, 5, 10, 25, 50, 100, 200, 500, 1000]
+const adjustmentSteps = [
+  1, 2, 5, 10, 25, 50, 100, 200, 500, 1000,
+]
 const ADJUSTMENT_DISTANCE = 12
-const ADJUSTMENT_STEP_INTERVAL = 400
+
+function getAdjustmentAmount(level: number) {
+  const magnitude = Math.abs(level)
+  if (magnitude === 0) return 0
+  if (magnitude <= adjustmentSteps.length) return adjustmentSteps[magnitude - 1]
+  return 1000 + (magnitude - adjustmentSteps.length) * 1000
+}
 
 type ActiveAdjustment = {
   pointerId: number
   lastY: number
   distance: number
   direction: 1 | -1 | null
-  startedAt: number
-  historyRecorded: boolean
+  level: number
+}
+
+type AdjustmentPreview = {
+  amount: number
+  x: number
+  y: number
 }
 
 export function LifeCounter({
@@ -50,8 +64,11 @@ export function LifeCounter({
     reset,
   } = useLife(playerId)
   const activeAdjustment = useRef<ActiveAdjustment | null>(null)
+  const [adjustmentPreview, setAdjustmentPreview] =
+    useState<AdjustmentPreview | null>(null)
   const otherPlayer = useLife(otherPlayerId)
   const otherPlayerLifePoints = otherPlayer.lifePoints
+  const otherPlayerDisplayedLifePoints = otherPlayer.displayedLifePoints
   const matchEnded = lifePoints === 0 || otherPlayer.lifePoints === 0
   const CounterSkin = counterSkins[theme]
 
@@ -67,8 +84,7 @@ export function LifeCounter({
       lastY: event.clientY,
       distance: 0,
       direction: null,
-      startedAt: performance.now(),
-      historyRecorded: false,
+      level: 0,
     }
   }
 
@@ -80,7 +96,13 @@ export function LifeCounter({
     adjustment.lastY = event.clientY
     if (movement === 0) return
 
-    const direction = movement > 0 ? 1 : -1
+    const isRotatedMobilePlayer =
+      playerId === 'player-1' && window.matchMedia('(max-width: 600px)').matches
+    const physicalDirection: 1 | -1 = movement > 0 ? 1 : -1
+    let direction: 1 | -1 = physicalDirection
+    if (isRotatedMobilePlayer) {
+      direction = direction === 1 ? -1 : 1
+    }
     if (adjustment.direction !== null && adjustment.direction !== direction) {
       adjustment.distance = 0
     }
@@ -91,28 +113,55 @@ export function LifeCounter({
     if (stepCount === 0) return
 
     adjustment.distance %= ADJUSTMENT_DISTANCE
-    const elapsed = performance.now() - adjustment.startedAt
-    const stepIndex = Math.min(
-      adjustmentSteps.length - 1,
-      Math.floor(elapsed / ADJUSTMENT_STEP_INTERVAL),
-    )
-    adjust(
-      direction * stepCount * adjustmentSteps[stepIndex],
-      !adjustment.historyRecorded,
-    )
-    adjustment.historyRecorded = true
+    const previousLevel = adjustment.level
+    let nextLevel = previousLevel + direction * stepCount
+
+    if (
+      (previousLevel > 0 && nextLevel < 0) ||
+      (previousLevel < 0 && nextLevel > 0)
+    ) {
+      nextLevel = 0
+    }
+
+    adjustment.level = nextLevel
+    const step = getAdjustmentAmount(adjustment.level)
+    const pendingAmount =
+      Math.sign(adjustment.level) *
+      (adjustment.level < 0 ? Math.min(step, lifePoints) : step)
+    setAdjustmentPreview({
+      amount: pendingAmount,
+      x: event.clientX,
+      y: event.clientY,
+    })
   }
 
-  function endLifeBarAdjustment(event: ReactPointerEvent<HTMLDivElement>) {
-    if (activeAdjustment.current?.pointerId === event.pointerId) {
-      activeAdjustment.current = null
-    }
+  function finishLifeBarAdjustment(event: ReactPointerEvent<HTMLDivElement>) {
+    const adjustment = activeAdjustment.current
+    if (!adjustment || adjustment.pointerId !== event.pointerId) return
+
+    const step = getAdjustmentAmount(adjustment.level)
+    const amount =
+      Math.sign(adjustment.level) *
+      (adjustment.level < 0 ? Math.min(step, lifePoints) : step)
+    if (amount !== 0) adjust(amount)
+    activeAdjustment.current = null
+    setAdjustmentPreview(null)
+  }
+
+  function cancelLifeBarAdjustment(event: ReactPointerEvent<HTMLDivElement>) {
+    if (activeAdjustment.current?.pointerId !== event.pointerId) return
+    activeAdjustment.current = null
+    setAdjustmentPreview(null)
   }
 
   const value =
-    otherPlayerLifePoints === 0
+    otherPlayerLifePoints === 0 &&
+    typeof otherPlayerDisplayedLifePoints === 'number' &&
+    otherPlayerDisplayedLifePoints === 0
       ? 'win'
-      : lifePoints === 0
+      : lifePoints === 0 &&
+          typeof displayedLifePoints === 'number' &&
+          displayedLifePoints === 0
         ? 'loser'
         : displayedLifePoints
 
@@ -127,8 +176,23 @@ export function LifeCounter({
         losses={losses}
         onLifeBarPointerDown={handleLifeBarPointerDown}
         onLifeBarPointerMove={handleLifeBarPointerMove}
-        onLifeBarPointerUp={endLifeBarAdjustment}
+        onLifeBarPointerUp={finishLifeBarAdjustment}
+        onLifeBarPointerCancel={cancelLifeBarAdjustment}
       />
+      {adjustmentPreview && adjustmentPreview.amount !== 0 &&
+        createPortal(
+          <div
+            className={`life-adjustment-preview ${adjustmentPreview.amount > 0 ? 'is-gain' : 'is-loss'}`}
+            style={{
+              left: Math.min(window.innerWidth - 56, Math.max(56, adjustmentPreview.x)),
+              top: Math.max(48, adjustmentPreview.y),
+            }}
+          >
+            {adjustmentPreview.amount > 0 ? '+' : '−'}
+            {Math.abs(adjustmentPreview.amount).toLocaleString()} LP
+          </div>,
+          document.body,
+        )}
       <div className="life-actions">
         {lifeActions.map((amount) => (
           <button
