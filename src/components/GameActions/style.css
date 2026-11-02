@@ -90,12 +90,20 @@
   .game-actions > .actions {
     width: clamp(52px, 15vw, 68px);
     flex: 0 1 68px;
+    padding: 0;
+  }
+
+  .actions > .action-button {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     padding: 10px;
   }
 
   .coin,
   .dice {
-    width: 60%;
-    height: 60%;
+    width: 48%;
+    height: 48%;
   }
 }
