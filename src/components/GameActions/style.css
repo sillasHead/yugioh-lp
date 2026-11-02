@@ -98,6 +98,16 @@
     padding: 0;
   }
 
+  .game-actions > .actions {
+    width: clamp(48px, 14vw, 60px);
+    flex: 0 1 60px;
+  }
+
+  .reset-game-spinner svg {
+    width: 50%;
+    height: 50%;
+  }
+
   .actions > .action-button {
     position: absolute;
     inset: 0;
