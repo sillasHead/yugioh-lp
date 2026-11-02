@@ -29,6 +29,11 @@
   animation: reset-game-spin 7s linear infinite;
 }
 
+.reset-game-spinner svg {
+  width: 88%;
+  height: 88%;
+}
+
 @keyframes reset-game-spin {
   to { transform: rotate(-360deg); }
 }
@@ -88,8 +93,8 @@
 
   .game-actions > button,
   .game-actions > .actions {
-    width: clamp(52px, 15vw, 68px);
-    flex: 0 1 68px;
+    width: clamp(48px, 14vw, 60px);
+    flex: 0 1 60px;
     padding: 0;
   }
 
