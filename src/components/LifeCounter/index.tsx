@@ -21,6 +21,8 @@ const counterSkins: Record<CounterTheme, ComponentType<CounterSkinProps>> = {
 }
 
 const lifeActions = [50, 100, 500, 1000]
+let lifeActionStackingOrder = 0
+const lifeActionStackingTokens = new WeakMap<HTMLButtonElement, number>()
 const adjustmentSteps = [
   1, 2, 5, 10, 25, 50, 100, 200, 500, 1000,
   1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000,
@@ -56,10 +58,21 @@ function playLifeActionAnimation(
         { transform: 'scale(1)', boxShadow: '0 0 0 transparent', filter: 'brightness(1)' },
       ]
 
-  button.animate(frames, {
+  button.getAnimations().forEach((animation) => animation.cancel())
+  const stackingToken = ++lifeActionStackingOrder
+  lifeActionStackingTokens.set(button, stackingToken)
+  button.style.zIndex = String(stackingToken)
+  const animation = button.animate(frames, {
     duration: (action === 'damage' ? 360 : 420) + intensity * (action === 'damage' ? 360 : 400),
     easing: action === 'damage' ? 'cubic-bezier(.2,.8,.3,1)' : 'ease-out',
   })
+  const restoreStacking = () => {
+    if (lifeActionStackingTokens.get(button) !== stackingToken) return
+    lifeActionStackingTokens.delete(button)
+    button.style.removeProperty('z-index')
+  }
+  animation.addEventListener('finish', restoreStacking, { once: true })
+  animation.addEventListener('cancel', restoreStacking, { once: true })
 }
 
 function getAdjustmentAmount(level: number) {
