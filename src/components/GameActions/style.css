@@ -99,13 +99,13 @@
   }
 
   .game-actions > .actions {
-    width: clamp(48px, 14vw, 60px);
-    flex: 0 1 60px;
+    width: clamp(46px, 13vw, 56px);
+    flex: 0 1 56px;
   }
 
   .reset-game-spinner svg {
-    width: 50%;
-    height: 50%;
+    width: 44%;
+    height: 44%;
   }
 
   .actions > .action-button {
