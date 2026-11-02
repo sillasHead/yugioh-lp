@@ -41,7 +41,7 @@
 
 @media (max-width: 600px) {
   :root {
-    --counter-size: clamp(150px, 46vw, 205px);
+    --counter-size: clamp(150px, min(46vw, 22svh), 205px);
   }
 
   .life-counter {
