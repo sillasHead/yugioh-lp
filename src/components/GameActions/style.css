@@ -218,7 +218,7 @@
   width: min(72vw, 320px);
   height: min(72vw, 320px);
   perspective: 700px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .roll-arena-object-trigger {
@@ -273,7 +273,7 @@
 }
 
 .roll-arena-coin-path .coin > img {
-  filter: drop-shadow(0 0 18px rgb(231 192 105 / 52%));
+  filter: none;
 }
 
 .roll-arena-coin-path .coin > .coin-front { transform: translateZ(3px); }
@@ -466,8 +466,8 @@
 
   .coin-flight,
   .dice {
-    width: 56%;
-    height: 56%;
+    width: 70%;
+    height: 70%;
   }
 
   .coin-flight {
@@ -482,17 +482,17 @@
 @keyframes coin-launch-mobile {
   0% { opacity: 0; transform: translate(-50%, -50%) scale(.35); }
   20% { opacity: 1; }
-  65% { transform: translate(-260%, -50%) scale(1.18); }
-  82% { transform: translate(-228%, -50%) scale(.94); }
-  100% { opacity: 1; transform: translate(-240%, -50%) scale(1); }
+  65% { transform: translate(-226%, -50%) scale(1.18); }
+  82% { transform: translate(-200%, -50%) scale(.94); }
+  100% { opacity: 1; transform: translate(-210%, -50%) scale(1); }
 }
 
 @keyframes dice-launch-mobile {
   0% { opacity: 0; transform: translate(-50%, -50%) scale(.35) rotate(-35deg); }
   20% { opacity: 1; }
-  65% { transform: translate(160%, -50%) scale(1.18) rotate(540deg); }
-  82% { transform: translate(130%, -50%) scale(.94) rotate(700deg); }
-  100% { opacity: 1; transform: translate(140%, -50%) scale(1) rotate(720deg); }
+  65% { transform: translate(128%, -50%) scale(1.18) rotate(540deg); }
+  82% { transform: translate(104%, -50%) scale(.94) rotate(700deg); }
+  100% { opacity: 1; transform: translate(112%, -50%) scale(1) rotate(720deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -504,6 +504,6 @@
 }
 
 @media (max-width: 600px) and (prefers-reduced-motion: reduce) {
-  .coin-flight { transform: translate(-240%, -50%); }
-  .dice { transform: translate(140%, -50%); }
+  .coin-flight { transform: translate(-210%, -50%); }
+  .dice { transform: translate(112%, -50%); }
 }
