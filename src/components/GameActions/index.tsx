@@ -85,6 +85,10 @@ export function GameActions({ players }: Props) {
         </button>
       </div>
 
+      <button type="button" onClick={undo} disabled={!canUndo}>
+        <Undo2 size={60} />
+      </button>
+
       <button
         type="button"
         className="reset-game"
@@ -96,10 +100,6 @@ export function GameActions({ players }: Props) {
         <span className="reset-game-spinner">
           <RefreshCcw size={60} />
         </span>
-      </button>
-
-      <button type="button" onClick={undo} disabled={!canUndo}>
-        <Undo2 size={60} />
       </button>
 
       <button
