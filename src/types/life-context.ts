@@ -7,6 +7,7 @@ import type {
 export type LifeContextType = PlayerLifeState & PlayerProfile & {
   hit: (amount: number) => void
   heal: (amount: number) => void
+  adjust: (amount: number, recordHistory: boolean) => void
   reset: () => void
 }
 

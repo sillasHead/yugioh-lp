@@ -43,6 +43,12 @@ export type GameState = {
 export type Action =
   | { type: 'HIT'; playerId: string; amount: number }
   | { type: 'HEAL'; playerId: string; amount: number }
+  | {
+      type: 'ADJUST_LP'
+      playerId: string
+      amount: number
+      recordHistory: boolean
+    }
   | { type: 'RESET'; playerId: string }
   | { type: 'RESET_ALL' }
   | { type: 'SET_DISPLAY'; playerId: string; value: number }

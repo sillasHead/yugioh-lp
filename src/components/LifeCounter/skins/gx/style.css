@@ -63,6 +63,9 @@
   height: calc(var(--counter-size) / 2.01);
   flex-direction: column;
   overflow: hidden;
+  cursor: ns-resize;
+  touch-action: none;
+  user-select: none;
   background:
     url('../../../../assets/noise-texture.png'),
     linear-gradient(to bottom, #2c3e50, #1a252f);

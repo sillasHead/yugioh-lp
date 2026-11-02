@@ -10,6 +10,9 @@ export function GxCounter({
   name,
   wins,
   losses,
+  onLifeBarPointerDown,
+  onLifeBarPointerMove,
+  onLifeBarPointerUp,
 }: CounterSkinProps) {
   const scaleX = direction === 'left' ? -1 : 1
 
@@ -33,7 +36,14 @@ export function GxCounter({
         <span className="gx-counter-record">V {wins} · D {losses}</span>
       </div>
 
-      <div className="gx-counter-life-bar">
+      <div
+        className="gx-counter-life-bar"
+        title="Arraste para cima para aumentar LP e para baixo para diminuir"
+        onPointerDown={onLifeBarPointerDown}
+        onPointerMove={onLifeBarPointerMove}
+        onPointerUp={onLifeBarPointerUp}
+        onPointerCancel={onLifeBarPointerUp}
+      >
         <div
           className="gx-counter-empty-bar"
           style={{ height: `${100 - lifePointsPercentage}%` }}

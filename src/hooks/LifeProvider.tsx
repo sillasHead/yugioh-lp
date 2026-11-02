@@ -324,25 +324,41 @@ function reducer(state: GameState, action: Action): GameState {
     lifePoints = Math.max(0, player.lifePoints - action.amount)
   } else if (action.type === 'HEAL') {
     lifePoints = player.lifePoints + action.amount
+  } else if (action.type === 'ADJUST_LP') {
+    lifePoints = Math.max(0, player.lifePoints + action.amount)
   } else {
     lifePoints = state.initialLifePoints
   }
 
-  const history = [...state.history.slice(-(HISTORY_LIMIT - 1)), createSnapshot(state)]
+  const nextHistory =
+    action.type === 'ADJUST_LP' && !action.recordHistory
+      ? state.history
+      : [
+          ...state.history.slice(-(HISTORY_LIMIT - 1)),
+          createSnapshot(state),
+        ]
   const nextPlayer: PlayerLifeState = {
     lifePoints,
-    displayedLifePoints: player.displayedLifePoints,
+    displayedLifePoints:
+      action.type === 'ADJUST_LP' ? lifePoints : player.displayedLifePoints,
     lifePointsPercentage: toLifePercentage(lifePoints, state.initialLifePoints),
+  }
+  if (action.type === 'ADJUST_LP' && lifePoints === player.lifePoints) {
+    return state
   }
   const players = { ...state.players, [action.playerId]: nextPlayer }
 
   if (action.type === 'RESET') {
-    return { ...state, players, result: null, history }
+    return { ...state, players, result: null, history: nextHistory }
   }
 
   let profiles = state.profiles
   let result: MatchResult | null = null
-  if (action.type === 'HIT' && lifePoints === 0) {
+  if (
+    (action.type === 'HIT' ||
+      (action.type === 'ADJUST_LP' && action.amount < 0)) &&
+    lifePoints === 0
+  ) {
     const opponentId = Object.keys(state.players).find(
       (id) => id !== action.playerId,
     )
@@ -367,7 +383,7 @@ function reducer(state: GameState, action: Action): GameState {
     players,
     profiles,
     result,
-    history,
+    history: nextHistory,
   }
 }
 
@@ -454,6 +470,13 @@ export function MultiLifeProvider({ children, configs }: Props) {
           animateVisual(id, player.lifePoints)
           dispatch({ type: 'HEAL', playerId: id, amount })
         },
+        adjust: (amount, recordHistory) =>
+          dispatch({
+            type: 'ADJUST_LP',
+            playerId: id,
+            amount,
+            recordHistory,
+          }),
         reset: () => {
           if (state.result) {
             for (const [playerId, currentPlayer] of Object.entries(state.players)) {
