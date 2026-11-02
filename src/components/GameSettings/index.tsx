@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { X } from 'lucide-react'
 import { useGameLife } from '../../hooks/LifeContext'
 import type { GameSettings } from '../../types/life-provider'
 import './style.css'
@@ -76,91 +77,95 @@ export function GameSettings({ playerIds, onClose }: Props) {
       }}
     >
       <form className="settings-panel" onSubmit={submit}>
-        <div className="settings-heading">
-          <h2>Configurações da partida</h2>
-          <button type="button" className="settings-close" onClick={onClose}>
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
+        <div className="settings-body">
+          <div className="settings-heading">
+            <h2>Configurações da partida</h2>
+            <button type="button" className="settings-close" onClick={onClose}>
+              <X size={18} strokeWidth={2.4} aria-hidden="true" />
+            </button>
+          </div>
 
-        <label className="settings-field">
-          LP iniciais para os dois jogadores
-          <input
-            type="number"
-            min="1"
-            step="1"
-            value={draft.initialLifePoints}
-            onChange={(event) =>
-              setDraft((current) => ({
-                ...current,
-                initialLifePoints: Number(event.target.value),
-              }))
-            }
-            required
-          />
-        </label>
-        <p className="settings-note">
-          Alterar os LP iniciais reinicia os pontos atuais. Salvar configurações
-          de LP ou jogadores limpa o histórico de desfazer.
-        </p>
+          <label className="settings-field">
+            LP iniciais para os dois jogadores
+            <input
+              type="number"
+              min="1000"
+              step="1000"
+              value={draft.initialLifePoints}
+              onChange={(event) =>
+                setDraft((current) => ({
+                  ...current,
+                  initialLifePoints: Number(event.target.value),
+                }))
+              }
+              required
+            />
+          </label>
+          <p className="settings-note">
+            Alterar os LP iniciais reinicia os pontos atuais. Salvar configurações
+            de LP ou jogadores limpa o histórico de desfazer.
+          </p>
 
-        {playerIds.map((playerId, index) => (
-          <fieldset className="settings-player" key={playerId}>
-            <legend>Jogador {index + 1}</legend>
-            <label className="settings-field">
-              Nome
-              <input
-                type="text"
-                maxLength={24}
-                value={draft.profiles[playerId]?.name ?? ''}
-                onChange={(event) =>
-                  updateProfile(playerId, 'name', event.target.value)
-                }
-                required
-              />
+          {playerIds.map((playerId, index) => (
+            <fieldset className="settings-player" key={playerId}>
+              <legend>Jogador {index + 1}</legend>
+              <label className="settings-field">
+                Nome
+                <input
+                  type="text"
+                  maxLength={24}
+                  value={draft.profiles[playerId]?.name ?? ''}
+                  onChange={(event) =>
+                    updateProfile(playerId, 'name', event.target.value)
+                  }
+                  required
+                />
+              </label>
+              <label className="settings-field">
+                Vitórias
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={draft.profiles[playerId]?.wins ?? 0}
+                  onChange={(event) =>
+                    updateProfile(playerId, 'wins', event.target.value)
+                  }
+                  required
+                />
+              </label>
+            </fieldset>
+          ))}
+
+          <p className="settings-note">
+            As vitórias são registradas ao terminar uma partida e podem ser ajustadas aqui.
+          </p>
+          <fieldset className="settings-roll-mode">
+            <legend>Lançamento de moeda e dado</legend>
+            <label>
+              <input type="radio" name="roll-mode" value="quick"
+                checked={draft.rollMode === 'quick'}
+                onChange={() => setDraft((current) => ({ ...current, rollMode: 'quick' }))} />
+              <span><strong>Rápido</strong><small>O resultado aparece junto ao botão e desaparece.</small></span>
             </label>
-            <label className="settings-field">
-              Vitórias
-              <input
-                type="number"
-                min="0"
-                step="1"
-                value={draft.profiles[playerId]?.wins ?? 0}
-                onChange={(event) =>
-                  updateProfile(playerId, 'wins', event.target.value)
-                }
-                required
-              />
+            <label>
+              <input type="radio" name="roll-mode" value="arena"
+                checked={draft.rollMode === 'arena'}
+                onChange={() => setDraft((current) => ({ ...current, rollMode: 'arena' }))} />
+              <span><strong>Arena</strong><small>A tela escurece e você pode lançar várias vezes.</small></span>
             </label>
           </fieldset>
-        ))}
-
-        <p className="settings-note">
-          As vitórias são registradas ao terminar uma partida e podem ser ajustadas aqui.
-        </p>
-        <fieldset className="settings-roll-mode">
-          <legend>Lançamento de moeda e dado</legend>
-          <label>
-            <input type="radio" name="roll-mode" value="quick"
-              checked={draft.rollMode === 'quick'}
-              onChange={() => setDraft((current) => ({ ...current, rollMode: 'quick' }))} />
-            <span><strong>Rápido</strong><small>O resultado aparece junto ao botão e desaparece.</small></span>
-          </label>
-          <label>
-            <input type="radio" name="roll-mode" value="arena"
-              checked={draft.rollMode === 'arena'}
-              onChange={() => setDraft((current) => ({ ...current, rollMode: 'arena' }))} />
-            <span><strong>Arena</strong><small>A tela escurece e você pode lançar várias vezes.</small></span>
-          </label>
-        </fieldset>
-        {error && <p className="settings-error">{error}</p>}
+        </div>
         <div className="settings-footer">
-          <button type="button" className="settings-cancel" onClick={onClose}>
-            Cancelar
-          </button>
-          <button type="submit" className="settings-save">
-            Salvar
-          </button>
+          {error && <p className="settings-error">{error}</p>}
+          <div className="settings-footer-actions">
+            <button type="button" className="settings-cancel" onClick={onClose}>
+              Cancelar
+            </button>
+            <button type="submit" className="settings-save">
+              Salvar
+            </button>
+          </div>
         </div>
       </form>
     </div>

@@ -3,7 +3,7 @@
 #root {
   min-height: 100svh;
   width: 100%;
-  padding: clamp(16px, 3vw, 48px);
+  padding: 0;
   background-color: #141613;
   background-image:
     radial-gradient(ellipse 27% 38% at 24% 46%, rgb(197 151 62 / 12%), transparent 78%),
@@ -12,6 +12,20 @@
     linear-gradient(90deg, transparent 49.95%, rgb(207 171 99 / 5%) 50%, transparent 50.05%),
     repeating-linear-gradient(0deg, rgb(255 255 255 / 0.35%) 0 1px, transparent 1px 4px),
     radial-gradient(ellipse at 50% 45%, #292b27 0%, #1d1f1c 58%, #111310 100%);
+}
+
+@media (min-width: 901px) {
+  #root {
+    height: 100svh;
+    overflow: clip;
+    padding: 0;
+  }
+}
+
+@media (min-width: 601px) {
+  body {
+    overflow: clip;
+  }
 }
 
 .container {
@@ -23,6 +37,19 @@
   gap: clamp(16px, 3vw, 52px);
 }
 
+@media (min-width: 901px) {
+  .container {
+    height: 100svh;
+    min-height: 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --counter-size: clamp(240px, min(40vw, 62svh), 560px);
+  }
+}
+
 .bungee-spice-regular {
   font-family: 'Bungee Spice', sans-serif;
   font-weight: 400;
@@ -31,7 +58,7 @@
 
 @media (max-width: 900px) {
   #root {
-    padding: 16px;
+    padding: 8px;
   }
 
   .container {
@@ -40,9 +67,23 @@
   }
 }
 
+@media (min-width: 601px) and (max-width: 900px) {
+  #root {
+    height: 100svh;
+    overflow: clip;
+  }
+
+  .container {
+    height: calc(100svh - 16px);
+    min-height: 0;
+  }
+}
+
 @media (max-width: 600px) {
   #root {
     min-height: 100svh;
+    height: auto;
+    overflow: visible;
     padding: max(12px, env(safe-area-inset-top)) 12px
       max(12px, env(safe-area-inset-bottom));
     background-image:

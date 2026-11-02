@@ -33,10 +33,15 @@ function normalizeProfile(value: unknown, fallbackName: string): PlayerProfile {
   }
 
   const candidate = value as Partial<PlayerProfile>
+  const candidateName =
+    typeof candidate.name === 'string' ? candidate.name.trim() : ''
+  const isLegacyDefault =
+    candidateName === 'Jogador 1' || candidateName === 'Jogador 2'
+
   return {
     name:
-      typeof candidate.name === 'string' && candidate.name.trim()
-        ? candidate.name.trim().slice(0, 24)
+      candidateName && !isLegacyDefault
+        ? candidateName.slice(0, 24)
         : fallbackName,
     wins:
       typeof candidate.wins === 'number' &&

@@ -164,8 +164,8 @@ export function GameActions({ players }: Props) {
             aria-hidden="true"
           >
             <span className={`coin ${rollResult.value === 0 ? 'is-face' : 'is-tail'}`}>
-              <img className="coin-front" src={ArenaFace} alt="" />
-              <img className="coin-back" src={ArenaTail} alt="" />
+              <img className="coin-front" src={ArenaFace} alt="" draggable={false} />
+              <img className="coin-back" src={ArenaTail} alt="" draggable={false} />
             </span>
           </span>
         )}
@@ -175,7 +175,7 @@ export function GameActions({ players }: Props) {
           aria-label="Lançar moeda"
           onClick={handleCoinToss}
         >
-          <img src={CoinToss} alt="" />
+          <img src={CoinToss} alt="" draggable={false} />
         </button>
       </div>
 
@@ -221,6 +221,7 @@ export function GameActions({ players }: Props) {
             src={diceImages[rollResult.value]}
             alt=""
             aria-hidden="true"
+            draggable={false}
           />
         )}
         <button
@@ -229,7 +230,7 @@ export function GameActions({ players }: Props) {
           aria-label="Lançar dado"
           onClick={handleDiceRoll}
         >
-          <img src={Dice} alt="" />
+          <img src={Dice} alt="" draggable={false} />
         </button>
       </div>
 
@@ -263,8 +264,8 @@ export function GameActions({ players }: Props) {
                     aria-label={`Moeda: ${rollResult.value === 0 ? 'heads' : 'tails'}. Lançar novamente`}
                     onClick={(event) => { event.stopPropagation(); handleCoinToss() }}>
                     <span className={`coin ${rollResult.value === 0 ? 'is-face' : 'is-tail'}`}>
-                      <img className="coin-front" src={ArenaFace} alt="" />
-                      <img className="coin-back" src={ArenaTail} alt="" />
+                      <img className="coin-front" src={ArenaFace} alt="" draggable={false} />
+                      <img className="coin-back" src={ArenaTail} alt="" draggable={false} />
                     </span>
                   </button>
               ) : (

@@ -28,6 +28,20 @@ body,
 body {
   min-height: 100svh;
   user-select: none;
+  -webkit-user-select: none;
+}
+
+img {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+input,
+textarea {
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 button {
@@ -40,6 +54,9 @@ button {
   font-weight: 600;
   background: #191919;
   cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
   transition: background-color 160ms ease, border-color 160ms ease,
     transform 120ms ease;
 }

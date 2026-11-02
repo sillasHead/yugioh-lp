@@ -63,7 +63,7 @@ export function GxCounter({
 
   return (
     <div className="gx-counter" style={{ transform: `scaleX(${scaleX})` }}>
-      <img className="gx-counter-art" src={gauge} alt="" />
+      <img className="gx-counter-art" src={gauge} alt="" draggable={false} />
       <div
         className={`gx-counter-score bungee-spice-regular${displayedValue === 'win' ? ' is-win' : displayedValue === 'loser' ? ' is-loser' : ''}`}
         style={
