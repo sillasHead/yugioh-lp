@@ -35,8 +35,8 @@ function playLifeActionAnimation(
 
   const intensity = amount <= 50 ? 0.2 : amount <= 100 ? 0.45 : amount <= 500 ? 0.78 : 1
   const scale = (1.03 + intensity * 0.17).toFixed(3)
-  const shift = (4 + intensity * 12).toFixed(1)
-  const rotation = (intensity * 3).toFixed(1)
+  const shift = 4 + intensity * 12
+  const rotation = intensity * 3
   const glow = Math.round(14 + intensity * 24)
   const glowOpacity = (0.5 + intensity * 0.45).toFixed(2)
 

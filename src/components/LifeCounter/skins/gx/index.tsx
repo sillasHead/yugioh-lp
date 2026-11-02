@@ -19,6 +19,8 @@ export function GxCounter({
   const scaleX = direction === 'left' ? -1 : 1
   const isWin = value === 'win'
   const scoreLength = String(value).length
+  const scoreLengthRef = useRef(scoreLength)
+  scoreLengthRef.current = scoreLength
   const [scoreOverride, setScoreOverride] = useState<string | null>(null)
   const wasWin = useRef(isWin)
 
@@ -37,7 +39,7 @@ export function GxCounter({
     const startedAt = performance.now()
     let animationFrame = 0
     const randomScore = () =>
-      Array.from({ length: scoreLength }, () => Math.floor(Math.random() * 10)).join('')
+      Array.from({ length: scoreLengthRef.current }, () => Math.floor(Math.random() * 10)).join('')
 
     setScoreOverride(randomScore())
 
@@ -53,7 +55,7 @@ export function GxCounter({
 
     animationFrame = requestAnimationFrame(scramble)
     return () => cancelAnimationFrame(animationFrame)
-  }, [isWin, scoreLength])
+  }, [isWin])
 
   const displayedValue = scoreOverride ?? value
 
