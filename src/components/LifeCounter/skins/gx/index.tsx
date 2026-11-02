@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import gauge from '../../../../assets/gauge.png'
 import type { CounterSkinProps } from '../../types'
 import './style.css'
@@ -10,7 +10,6 @@ export function GxCounter({
   direction,
   name,
   wins,
-  losses,
   onLifeBarPointerDown,
   onLifeBarPointerMove,
   onLifeBarPointerUp,
@@ -39,7 +38,9 @@ export function GxCounter({
     const startedAt = performance.now()
     let animationFrame = 0
     const randomScore = () =>
-      Array.from({ length: scoreLengthRef.current }, () => Math.floor(Math.random() * 10)).join('')
+      Array.from({ length: scoreLengthRef.current }, () =>
+        Math.floor(Math.random() * 10),
+      ).join('')
 
     setScoreOverride(randomScore())
 
@@ -64,10 +65,12 @@ export function GxCounter({
       <img className="gx-counter-art" src={gauge} alt="" />
       <div
         className={`gx-counter-score bungee-spice-regular${displayedValue === 'win' ? ' is-win' : displayedValue === 'loser' ? ' is-loser' : ''}`}
-        style={{
-          transform: `scaleX(${scaleX}) scaleY(2.5)`,
-          '--score-length': String(displayedValue).length,
-        } as CSSProperties}
+        style={
+          {
+            transform: `scaleX(${scaleX}) scaleY(2.5)`,
+            '--score-length': String(displayedValue).length,
+          } as CSSProperties
+        }
       >
         {displayedValue}
       </div>
@@ -76,7 +79,9 @@ export function GxCounter({
         style={{ transform: `scaleX(${scaleX})` }}
       >
         <span className="gx-counter-name">{name}</span>
-        <span className="gx-counter-record">V {wins} · D {losses}</span>
+        <span className="gx-counter-record" aria-label={`Vitórias: ${wins}`}>
+          V {wins}
+        </span>
       </div>
 
       <div

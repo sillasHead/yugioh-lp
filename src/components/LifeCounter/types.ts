@@ -8,7 +8,6 @@ export type CounterSkinProps = {
   direction: 'left' | 'right'
   name: string
   wins: number
-  losses: number
   onLifeBarPointerDown: PointerEventHandler<HTMLDivElement>
   onLifeBarPointerMove: PointerEventHandler<HTMLDivElement>
   onLifeBarPointerUp: PointerEventHandler<HTMLDivElement>

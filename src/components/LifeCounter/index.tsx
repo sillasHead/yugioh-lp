@@ -96,7 +96,6 @@ export function LifeCounter({
     lifePointsPercentage,
     name,
     wins,
-    losses,
     hit,
     heal,
     adjust,
@@ -223,7 +222,6 @@ export function LifeCounter({
         direction={playerDirection}
         name={name}
         wins={wins}
-        losses={losses}
         onLifeBarPointerDown={handleLifeBarPointerDown}
         onLifeBarPointerMove={handleLifeBarPointerMove}
         onLifeBarPointerUp={finishLifeBarAdjustment}
@@ -276,6 +274,8 @@ export function LifeCounter({
         <button
           type="button"
           className="reset btn-gray"
+          title="Reiniciar LP deste jogador"
+          aria-label="Reiniciar LP deste jogador"
           onClick={(event) => {
             playResetAnimation(event.currentTarget)
             reset()

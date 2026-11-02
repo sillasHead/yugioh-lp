@@ -83,23 +83,33 @@
   gap: 4px;
   padding: 0 3%;
   color: #dce8e5;
-  font-family: 'Oxanium', system-ui, sans-serif;
-  font-size: clamp(0.48rem, calc(var(--counter-size) / 34), 0.95rem);
+  font-family: 'Chakra Petch', 'Oxanium', system-ui, sans-serif;
+  font-size: clamp(0.55rem, calc(var(--counter-size) / 34), 0.95rem);
   font-weight: 700;
   letter-spacing: 0.015em;
   line-height: 1;
   white-space: nowrap;
 }
 
+.gx-counter-name,
+.gx-counter-record {
+  font-family: 'Sixtyfour', 'Chakra Petch', monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-variation-settings: 'BLED' 0, 'SCAN' 0;
+  letter-spacing: -0.06em;
+}
+
 .gx-counter-name {
   min-width: 0;
   overflow: hidden;
+  font-size: 0.92em;
   text-overflow: ellipsis;
 }
 
 .gx-counter-record {
   flex: none;
-  font-size: 0.8em;
+  font-size: clamp(0.6rem, calc(var(--counter-size) / 30), 1rem);
   font-variant-numeric: tabular-nums;
 }
 
@@ -176,6 +186,17 @@
 .gx-counter-color-8 { background-color: #a9171f; }
 
 @media (max-width: 600px) {
+  .gx-counter-name,
+  .gx-counter-record {
+    font-family: 'Russo One', 'Chakra Petch', sans-serif;
+    font-variation-settings: normal;
+    letter-spacing: 0;
+  }
+
+  .gx-counter-name {
+    font-size: 1em;
+  }
+
   .gx-counter-art {
     height: calc(var(--counter-size) * 0.76);
     object-fit: cover;

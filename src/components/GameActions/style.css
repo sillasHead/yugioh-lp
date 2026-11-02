@@ -14,6 +14,30 @@
   aspect-ratio: 1;
   place-items: center;
   padding: 14px;
+  border: 1px solid rgb(205 167 89 / 42%);
+  border-radius: 9px;
+  background: linear-gradient(145deg, #292a23, #141612 62%, #10120f);
+  box-shadow:
+    inset 0 1px rgb(255 233 174 / 16%),
+    inset 0 -2px rgb(0 0 0 / 35%),
+    0 4px 12px rgb(0 0 0 / 30%);
+}
+
+.game-actions > button:hover:not(:disabled),
+.game-actions .action-button:hover:not(:disabled) {
+  border-color: rgb(221 184 107 / 68%);
+  background: linear-gradient(145deg, #35362b, #1e211b 62%, #171a15);
+  box-shadow:
+    inset 0 1px rgb(255 233 174 / 25%),
+    0 0 12px rgb(196 153 67 / 16%),
+    0 4px 12px rgb(0 0 0 / 30%);
+}
+
+.game-actions > button:focus-visible,
+.game-actions .action-button:focus-visible,
+.life-actions button:focus-visible {
+  outline: 2px solid #e3bd6b;
+  outline-offset: 3px;
 }
 
 .game-actions > button svg {
@@ -30,8 +54,8 @@
 }
 
 .game-actions > button .reset-game-spinner svg {
-  width: 60%;
-  height: 60%;
+  width: 88%;
+  height: 88%;
 }
 
 @keyframes reset-game-spin {
@@ -46,6 +70,12 @@
   position: relative;
   width: 100%;
   aspect-ratio: 1;
+  isolation: isolate;
+}
+
+.actions > .action-button {
+  position: relative;
+  z-index: 1;
 }
 
 .action-button img {
@@ -58,7 +88,7 @@
 .coin,
 .dice {
   position: absolute;
-  z-index: -1;
+  z-index: 0;
   top: 50%;
   left: 50%;
   width: 62%;
@@ -69,7 +99,7 @@
 }
 
 .active-coin {
-  transform: translate(-50%, -190%) rotate(360deg);
+  transform: translate(-50%, -200%) rotate(360deg);
 }
 
 .active-dice {
@@ -129,7 +159,7 @@
   }
 
   .active-coin {
-    transform: translate(-220%, -50%) rotate(360deg);
+    transform: translate(-240%, -50%) rotate(360deg);
   }
 
   .active-dice {

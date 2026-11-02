@@ -97,6 +97,8 @@ export function GameActions({ players }: Props) {
       <button
         type="button"
         className="reset-game"
+        title="Reiniciar LP dos dois jogadores"
+        aria-label="Reiniciar LP dos dois jogadores"
         onClick={(event) => {
           playResetAnimation(event.currentTarget)
           resetAll()

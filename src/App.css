@@ -1,9 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Oxanium:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Chakra+Petch:wght@600;700&family=Oxanium:wght@500;600;700&family=Russo+One&family=Sixtyfour&display=swap');
 
 #root {
   min-height: 100svh;
   width: 100%;
   padding: clamp(16px, 3vw, 48px);
+  background-color: #141613;
+  background-image:
+    radial-gradient(ellipse 27% 38% at 24% 46%, rgb(197 151 62 / 12%), transparent 78%),
+    radial-gradient(ellipse 27% 38% at 76% 46%, rgb(197 151 62 / 12%), transparent 78%),
+    radial-gradient(circle at 50% 50%, transparent 0 23%, rgb(207 171 99 / 6%) 23.1% 23.3%, transparent 23.4% 36%, rgb(207 171 99 / 5%) 36.1% 36.3%, transparent 36.4%),
+    linear-gradient(90deg, transparent 49.95%, rgb(207 171 99 / 5%) 50%, transparent 50.05%),
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.35%) 0 1px, transparent 1px 4px),
+    radial-gradient(ellipse at 50% 45%, #292b27 0%, #1d1f1c 58%, #111310 100%);
 }
 
 .container {
@@ -37,6 +45,11 @@
     min-height: 100svh;
     padding: max(12px, env(safe-area-inset-top)) 12px
       max(12px, env(safe-area-inset-bottom));
+    background-image:
+      radial-gradient(ellipse 72% 23% at 50% 28%, rgb(197 151 62 / 11%), transparent 82%),
+      radial-gradient(ellipse 72% 23% at 50% 72%, rgb(197 151 62 / 11%), transparent 82%),
+      repeating-linear-gradient(0deg, rgb(255 255 255 / 0.35%) 0 1px, transparent 1px 4px),
+      linear-gradient(160deg, #20221e, #151714 62%, #101210);
   }
 
   .container {

@@ -135,7 +135,7 @@ export function GameSettings({ playerIds, onClose }: Props) {
         ))}
 
         <p className="settings-note">
-          Vitórias podem ser ajustadas aqui; derrotas são registradas ao terminar uma partida.
+          As vitórias são registradas ao terminar uma partida e podem ser ajustadas aqui.
         </p>
         {error && <p className="settings-error">{error}</p>}
         <div className="settings-footer">
