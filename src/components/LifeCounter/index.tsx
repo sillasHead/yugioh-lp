@@ -23,6 +23,7 @@ const counterSkins: Record<CounterTheme, ComponentType<CounterSkinProps>> = {
 const lifeActions = [50, 100, 500, 1000]
 const adjustmentSteps = [
   1, 2, 5, 10, 25, 50, 100, 200, 500, 1000,
+  1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000,
 ]
 const ADJUSTMENT_DISTANCE = 12
 
@@ -65,7 +66,7 @@ function getAdjustmentAmount(level: number) {
   const magnitude = Math.abs(level)
   if (magnitude === 0) return 0
   if (magnitude <= adjustmentSteps.length) return adjustmentSteps[magnitude - 1]
-  return 1000 + (magnitude - adjustmentSteps.length) * 1000
+  return 2000 + (magnitude - adjustmentSteps.length) * 1000
 }
 
 type ActiveAdjustment = {
