@@ -392,18 +392,22 @@ export function MultiLifeProvider({ children, configs }: Props) {
     .join('|')
 
   useEffect(() => {
-    for (const { id } of configs) {
-      localStorage.setItem(id, String(state.players[id]?.lifePoints ?? 0))
+    try {
+      for (const { id } of configs) {
+        localStorage.setItem(id, String(state.players[id]?.lifePoints ?? 0))
+      }
+      localStorage.setItem('duel-history', JSON.stringify(state.history))
+      localStorage.setItem(
+        SETTINGS_KEY,
+        JSON.stringify({
+          initialLifePoints: state.initialLifePoints,
+          profiles: state.profiles,
+          result: state.result,
+        }),
+      )
+    } catch {
+      // Keep the current duel usable when browser storage is unavailable.
     }
-    localStorage.setItem('duel-history', JSON.stringify(state.history))
-    localStorage.setItem(
-      SETTINGS_KEY,
-      JSON.stringify({
-        initialLifePoints: state.initialLifePoints,
-        profiles: state.profiles,
-        result: state.result,
-      }),
-    )
   }, [
     configs,
     lifePointsStorage,
