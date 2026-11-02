@@ -92,9 +92,10 @@
   gap: 4px;
   padding: 0 3%;
   color: #dce8e5;
-  font-family: system-ui, sans-serif;
+  font-family: 'Oxanium', system-ui, sans-serif;
   font-size: clamp(0.48rem, calc(var(--counter-size) / 34), 0.95rem);
   font-weight: 700;
+  letter-spacing: 0.015em;
   line-height: 1;
   white-space: nowrap;
 }
@@ -108,6 +109,7 @@
 .gx-counter-record {
   flex: none;
   font-size: 0.8em;
+  font-variant-numeric: tabular-nums;
 }
 
 .gx-counter-life-bar {
