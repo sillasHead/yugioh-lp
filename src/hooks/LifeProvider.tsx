@@ -480,7 +480,23 @@ export function MultiLifeProvider({ children, configs }: Props) {
             animateVisual(id, player.lifePoints, nextSettings.initialLifePoints)
           }
         }
-        dispatch({ type: 'SET_SETTINGS', settings: nextSettings })
+        const playerIds = Object.keys(nextSettings.profiles)
+        const profiles = { ...nextSettings.profiles }
+        if (playerIds.length === 2) {
+          const [firstId, secondId] = playerIds
+          profiles[firstId] = {
+            ...profiles[firstId],
+            losses: profiles[secondId].wins,
+          }
+          profiles[secondId] = {
+            ...profiles[secondId],
+            losses: profiles[firstId].wins,
+          }
+        }
+        dispatch({
+          type: 'SET_SETTINGS',
+          settings: { ...nextSettings, profiles },
+        })
       },
       resetAll: () => {
         if (
