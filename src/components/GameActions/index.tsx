@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import CoinToss from '../../assets/coin/coin-toss.svg'
 import Face from '../../assets/coin/face.png'
@@ -21,6 +21,15 @@ type Props = {
   players: string[]
 }
 
+type RollResult = {
+  kind: 'coin' | 'dice'
+  value: number
+  id: number
+}
+
+const diceImages = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6]
+const ROLL_LIFETIME = 2800
+
 export function GameActions({ players }: Props) {
   const {
     canUndo,
@@ -28,43 +37,30 @@ export function GameActions({ players }: Props) {
     undo: undoLastAction,
   } = useGameLife()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [rollResult, setRollResult] = useState<RollResult | null>(null)
+  const rollId = useRef(0)
+  const hideRollTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const delay = 1250
+  useEffect(() => () => {
+    if (hideRollTimer.current !== null) clearTimeout(hideRollTimer.current)
+  }, [])
 
-  const tailRef = useRef<HTMLImageElement>(null)
-  const faceRef = useRef<HTMLImageElement>(null)
-
-  const diceRefs = useRef<Array<HTMLImageElement | null>>([])
-  const diceImages = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6]
+  function showRoll(kind: RollResult['kind'], value: number) {
+    if (hideRollTimer.current !== null) clearTimeout(hideRollTimer.current)
+    rollId.current += 1
+    setRollResult({ kind, value, id: rollId.current })
+    hideRollTimer.current = setTimeout(() => {
+      setRollResult(null)
+      hideRollTimer.current = null
+    }, ROLL_LIFETIME)
+  }
 
   function handleCoinToss() {
-    const randomNumber = Math.floor(Math.random() * 2)
-    const coinFace = randomNumber === 0 ? 'face' : 'tail'
-
-    switch (coinFace) {
-      case 'face':
-        faceRef.current?.classList.add('active-coin')
-        setTimeout(() => {
-          faceRef.current?.classList.remove('active-coin')
-        }, delay)
-        break
-      case 'tail':
-        tailRef.current?.classList.add('active-coin')
-        setTimeout(() => {
-          tailRef.current?.classList.remove('active-coin')
-        }, delay)
-        break
-    }
+    showRoll('coin', Math.floor(Math.random() * 2))
   }
 
   function handleDiceRoll() {
-    const randomIndex = Math.floor(Math.random() * 6)
-    const ref = diceRefs.current[randomIndex]
-
-    ref?.classList.add('active-dice')
-    setTimeout(() => {
-      ref?.classList.remove('active-dice')
-    }, delay)
+    showRoll('dice', Math.floor(Math.random() * diceImages.length))
   }
 
   function undo() {
@@ -74,14 +70,25 @@ export function GameActions({ players }: Props) {
   return (
     <div className="game-actions">
       <div className="actions">
-        <img className="coin" ref={faceRef} src={Face} alt="Coin Face" />
-        <img className="coin" ref={tailRef} src={Tail} alt="Coin Tail" />
+        {rollResult?.kind === 'coin' && (
+          <span
+            key={rollResult.id}
+            className="coin-flight"
+            aria-hidden="true"
+          >
+            <span className={`coin ${rollResult.value === 0 ? 'is-face' : 'is-tail'}`}>
+              <img className="coin-front" src={Face} alt="" />
+              <img className="coin-back" src={Tail} alt="" />
+            </span>
+          </span>
+        )}
         <button
           type="button"
           className="action-button"
+          aria-label="Lançar moeda"
           onClick={handleCoinToss}
         >
-          <img src={CoinToss} alt="Coin Toss" />
+          <img src={CoinToss} alt="" />
         </button>
       </div>
 
@@ -118,25 +125,32 @@ export function GameActions({ players }: Props) {
       </button>
 
       <div className="actions">
-        {diceImages.map((img, i) => (
+        {rollResult?.kind === 'dice' && (
           <img
-            key={img}
+            key={rollResult.id}
             className="dice"
-            ref={(element) => {
-              diceRefs.current[i] = element
-            }}
-            src={img}
-            alt={`Dice ${i + 1}`}
+            src={diceImages[rollResult.value]}
+            alt=""
+            aria-hidden="true"
           />
-        ))}
+        )}
         <button
           type="button"
           className="action-button"
+          aria-label="Lançar dado"
           onClick={handleDiceRoll}
         >
-          <img src={Dice} alt="Dice" />
+          <img src={Dice} alt="" />
         </button>
       </div>
+
+      <span className="roll-announcement" role="status">
+        {rollResult?.kind === 'coin'
+          ? `Moeda: ${rollResult.value === 0 ? 'cara' : 'coroa'}`
+          : rollResult?.kind === 'dice'
+            ? `Dado: ${rollResult.value + 1}`
+            : ''}
+      </span>
 
       {isSettingsOpen && (
         <GameSettings

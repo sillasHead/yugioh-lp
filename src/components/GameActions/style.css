@@ -1,4 +1,5 @@
 .game-actions {
+  position: relative;
   display: flex;
   width: 96px;
   flex-direction: column;
@@ -71,6 +72,7 @@
   width: 100%;
   aspect-ratio: 1;
   isolation: isolate;
+  perspective: 320px;
 }
 
 .actions > .action-button {
@@ -85,7 +87,7 @@
   object-fit: contain;
 }
 
-.coin,
+.coin-flight,
 .dice {
   position: absolute;
   z-index: 0;
@@ -93,17 +95,85 @@
   left: 50%;
   width: 62%;
   height: 62%;
+  pointer-events: none;
+  animation-duration: 900ms, 300ms;
+  animation-delay: 0ms, 2400ms;
+  animation-fill-mode: both, forwards;
+  animation-timing-function: cubic-bezier(.22, .75, .22, 1), ease-in;
+}
+
+.coin-flight {
+  perspective: 220px;
+  animation-name: coin-launch, roll-fade;
+}
+
+.coin {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  animation: coin-spin 900ms cubic-bezier(.18, .7, .25, 1) both;
+}
+
+.coin.is-face { --coin-angle: 1440deg; }
+.coin.is-tail { --coin-angle: 1620deg; }
+
+.coin > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  transform: translate(-50%, -50%);
-  transition: transform 200ms ease;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  filter: drop-shadow(0 0 9px rgb(231 192 105 / 65%));
 }
 
-.active-coin {
-  transform: translate(-50%, -200%) rotate(360deg);
+.coin-back {
+  transform: rotateY(180deg);
 }
 
-.active-dice {
-  transform: translate(-50%, 100%) rotate(-360deg);
+.dice {
+  object-fit: contain;
+  animation-name: dice-launch, roll-fade;
+  filter: drop-shadow(0 0 9px rgb(133 210 255 / 60%));
+}
+
+@keyframes coin-launch {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.35); }
+  20% { opacity: 1; }
+  65% { transform: translate(-50%, -225%) scale(1.18); }
+  82% { transform: translate(-50%, -188%) scale(.94); }
+  100% { opacity: 1; transform: translate(-50%, -200%) scale(1); }
+}
+
+@keyframes coin-spin {
+  0% { transform: rotateY(0); }
+  72% { transform: rotateY(calc(var(--coin-angle) - 90deg)); }
+  100% { transform: rotateY(var(--coin-angle)); }
+}
+
+@keyframes dice-launch {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.35) rotate(-35deg); }
+  20% { opacity: 1; }
+  65% { transform: translate(-50%, 120%) scale(1.18) rotate(540deg); }
+  82% { transform: translate(-50%, 88%) scale(.94) rotate(700deg); }
+  100% { opacity: 1; transform: translate(-50%, 100%) scale(1) rotate(720deg); }
+}
+
+@keyframes roll-fade {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.roll-announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media (max-width: 900px) {
@@ -152,17 +222,46 @@
     padding: 10px;
   }
 
-  .coin,
+  .coin-flight,
   .dice {
     width: 56%;
     height: 56%;
   }
 
-  .active-coin {
-    transform: translate(-240%, -50%) rotate(360deg);
+  .coin-flight {
+    animation-name: coin-launch-mobile, roll-fade;
   }
 
-  .active-dice {
-    transform: translate(140%, -50%) rotate(-360deg);
+  .dice {
+    animation-name: dice-launch-mobile, roll-fade;
   }
+}
+
+@keyframes coin-launch-mobile {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.35); }
+  20% { opacity: 1; }
+  65% { transform: translate(-260%, -50%) scale(1.18); }
+  82% { transform: translate(-228%, -50%) scale(.94); }
+  100% { opacity: 1; transform: translate(-240%, -50%) scale(1); }
+}
+
+@keyframes dice-launch-mobile {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.35) rotate(-35deg); }
+  20% { opacity: 1; }
+  65% { transform: translate(160%, -50%) scale(1.18) rotate(540deg); }
+  82% { transform: translate(130%, -50%) scale(.94) rotate(700deg); }
+  100% { opacity: 1; transform: translate(140%, -50%) scale(1) rotate(720deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coin-flight,
+  .dice { animation: none; opacity: 1; }
+  .coin-flight { transform: translate(-50%, -200%); }
+  .coin { animation: none; transform: rotateY(var(--coin-angle)); }
+  .dice { transform: translate(-50%, 100%); }
+}
+
+@media (max-width: 600px) and (prefers-reduced-motion: reduce) {
+  .coin-flight { transform: translate(-240%, -50%); }
+  .dice { transform: translate(140%, -50%); }
 }
