@@ -81,6 +81,7 @@ type AdjustmentPreview = {
   amount: number
   x: number
   y: number
+  isTouch: boolean
 }
 
 export function LifeCounter({
@@ -166,10 +167,21 @@ export function LifeCounter({
     const pendingAmount =
       Math.sign(adjustment.level) *
       (adjustment.level < 0 ? Math.min(step, lifePoints) : step)
+    const isTouch = event.pointerType !== 'mouse'
+    const touchOffset = Math.min(88, window.innerWidth * 0.22)
+    const touchX =
+      event.clientX < window.innerWidth / 2
+        ? event.clientX + touchOffset
+        : event.clientX - touchOffset
     setAdjustmentPreview({
       amount: pendingAmount,
-      x: event.clientX,
-      y: event.clientY,
+      x: isTouch
+        ? Math.max(80, Math.min(window.innerWidth - 80, touchX))
+        : Math.min(window.innerWidth - 56, Math.max(56, event.clientX)),
+      y: isTouch
+        ? Math.max(56, Math.min(window.innerHeight - 32, event.clientY - 56))
+        : Math.max(48, event.clientY),
+      isTouch,
     })
   }
 
@@ -220,7 +232,7 @@ export function LifeCounter({
       {adjustmentPreview && adjustmentPreview.amount !== 0 &&
         createPortal(
           <div
-            className={`life-adjustment-preview ${adjustmentPreview.amount > 0 ? 'is-gain' : 'is-loss'}`}
+            className={`life-adjustment-preview${adjustmentPreview.isTouch ? ' is-touch' : ''} ${adjustmentPreview.amount > 0 ? 'is-gain' : 'is-loss'}`}
             style={{
               left: Math.min(window.innerWidth - 56, Math.max(56, adjustmentPreview.x)),
               top: Math.max(48, adjustmentPreview.y),

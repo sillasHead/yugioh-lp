@@ -48,6 +48,10 @@
   color: #ff7878;
 }
 
+.life-adjustment-preview.is-touch {
+  transform: translate(-50%, -50%);
+}
+
 .reset {
   grid-column: 2 / span 2;
   display: grid;
