@@ -21,7 +21,7 @@ export function GameSettings({ playerIds, onClose }: Props) {
 
   function updateProfile(
     playerId: string,
-    field: 'name' | 'wins' | 'losses',
+    field: 'name' | 'wins',
     value: string,
   ) {
     setDraft((current) => ({
@@ -46,14 +46,12 @@ export function GameSettings({ playerIds, onClose }: Props) {
       return (
         profile.name.trim().length > 0 &&
         Number.isSafeInteger(profile.wins) &&
-        profile.wins >= 0 &&
-        Number.isSafeInteger(profile.losses) &&
-        profile.losses >= 0
+        profile.wins >= 0
       )
     })
 
     if (!validPoints || !validProfiles) {
-      setError('Informe valores inteiros válidos e um nome para cada jogador.')
+      setError('Informe um nome e uma quantidade de vitórias válida para cada jogador.')
       return
     }
 
@@ -120,39 +118,24 @@ export function GameSettings({ playerIds, onClose }: Props) {
                 required
               />
             </label>
-            <div className="settings-record-fields">
-              <label className="settings-field">
-                Vitórias
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  value={draft.profiles[playerId]?.wins ?? 0}
-                  onChange={(event) =>
-                    updateProfile(playerId, 'wins', event.target.value)
-                  }
-                  required
-                />
-              </label>
-              <label className="settings-field">
-                Derrotas
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  value={draft.profiles[playerId]?.losses ?? 0}
-                  onChange={(event) =>
-                    updateProfile(playerId, 'losses', event.target.value)
-                  }
-                  required
-                />
-              </label>
-            </div>
+            <label className="settings-field">
+              Vitórias
+              <input
+                type="number"
+                min="0"
+                step="1"
+                value={draft.profiles[playerId]?.wins ?? 0}
+                onChange={(event) =>
+                  updateProfile(playerId, 'wins', event.target.value)
+                }
+                required
+              />
+            </label>
           </fieldset>
         ))}
 
         <p className="settings-note">
-          O placar também é atualizado quando a partida termina.
+          Vitórias podem ser ajustadas aqui; derrotas são registradas ao terminar uma partida.
         </p>
         {error && <p className="settings-error">{error}</p>}
         <div className="settings-footer">

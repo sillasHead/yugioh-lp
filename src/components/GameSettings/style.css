@@ -21,8 +21,7 @@
 }
 
 .settings-heading,
-.settings-footer,
-.settings-record-fields {
+.settings-footer {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -91,10 +90,6 @@
   padding: 0 6px;
   color: #e4c06c;
   font-weight: 700;
-}
-
-.settings-record-fields > * {
-  flex: 1;
 }
 
 .settings-footer {
