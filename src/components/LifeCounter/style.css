@@ -50,7 +50,13 @@
 
 .reset {
   grid-column: 2 / span 2;
-  justify-self: stretch;
+  display: grid;
+  width: 48px;
+  aspect-ratio: 1;
+  place-items: center;
+  justify-self: center;
+  padding: 10px;
+  border-radius: 50%;
 }
 
 @media (max-width: 900px) {

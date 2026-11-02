@@ -55,14 +55,6 @@
   transform: translate(-50%, 100%) rotate(-360deg);
 }
 
-.reset-game svg {
-  transition: transform 400ms ease;
-}
-
-.reset-game:active svg {
-  transform: rotate(-180deg);
-}
-
 @media (max-width: 900px) {
   .game-actions {
     width: 68px;

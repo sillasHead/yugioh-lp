@@ -4,6 +4,8 @@ import { createPortal } from 'react-dom'
 import { RefreshCcw } from 'lucide-react'
 import { useLife } from '../../hooks/LifeContext'
 import { GxCounter } from './skins/gx'
+import { CounterRack } from '../CounterRack'
+import { playResetAnimation } from '../../utils/animations'
 import type { CounterSkinProps, CounterTheme } from './types'
 import './style.css'
 
@@ -23,6 +25,41 @@ const adjustmentSteps = [
   1, 2, 5, 10, 25, 50, 100, 200, 500, 1000,
 ]
 const ADJUSTMENT_DISTANCE = 12
+
+function playLifeActionAnimation(
+  button: HTMLButtonElement,
+  action: 'damage' | 'heal',
+  amount: number,
+) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+  const intensity = amount <= 50 ? 0.2 : amount <= 100 ? 0.45 : amount <= 500 ? 0.78 : 1
+  const scale = (1.03 + intensity * 0.17).toFixed(3)
+  const shift = (4 + intensity * 12).toFixed(1)
+  const rotation = (intensity * 3).toFixed(1)
+  const glow = Math.round(14 + intensity * 24)
+  const glowOpacity = (0.5 + intensity * 0.45).toFixed(2)
+
+  const frames: Keyframe[] = action === 'damage'
+    ? [
+        { transform: 'translateX(0) scale(1)', boxShadow: '0 0 0 transparent', filter: 'brightness(1)' },
+        { offset: 0.22, transform: `translateX(-${shift}px) rotate(-${rotation}deg) scale(${scale})`, boxShadow: `0 0 ${glow}px rgb(255 87 59 / ${glowOpacity})`, filter: `brightness(${1.25 + intensity * 0.55})` },
+        { offset: 0.42, transform: `translateX(${(shift * 0.75).toFixed(1)}px) rotate(${rotation}deg) scale(.98)`, boxShadow: `0 0 ${Math.round(glow * 0.7)}px rgb(255 87 59 / ${(intensity * 0.5 + 0.3).toFixed(2)})`, filter: 'brightness(1.3)' },
+        { offset: 0.62, transform: `translateX(-${(shift * 0.4).toFixed(1)}px) scale(1.01)`, boxShadow: `0 0 ${Math.round(glow * 0.4)}px rgb(255 87 59 / ${(intensity * 0.3 + 0.15).toFixed(2)})`, filter: 'brightness(1.12)' },
+        { transform: 'translateX(0) scale(1)', boxShadow: '0 0 0 transparent', filter: 'brightness(1)' },
+      ]
+    : [
+        { transform: 'scale(.94)', boxShadow: '0 0 0 transparent', filter: 'brightness(1)' },
+        { offset: 0.38, transform: `scale(${(1.04 + intensity * 0.22).toFixed(3)})`, boxShadow: `0 0 ${Math.round(16 + intensity * 32)}px rgb(57 223 139 / ${glowOpacity})`, filter: `brightness(${1.2 + intensity * 0.5})` },
+        { offset: 0.68, transform: 'scale(.99)', boxShadow: `0 0 ${Math.round(10 + intensity * 18)}px rgb(57 223 139 / ${(intensity * 0.45 + 0.25).toFixed(2)})`, filter: 'brightness(1.15)' },
+        { transform: 'scale(1)', boxShadow: '0 0 0 transparent', filter: 'brightness(1)' },
+      ]
+
+  button.animate(frames, {
+    duration: (action === 'damage' ? 360 : 420) + intensity * (action === 'damage' ? 360 : 400),
+    easing: action === 'damage' ? 'cubic-bezier(.2,.8,.3,1)' : 'ease-out',
+  })
+}
 
 function getAdjustmentAmount(level: number) {
   const magnitude = Math.abs(level)
@@ -193,12 +230,17 @@ export function LifeCounter({
           </div>,
           document.body,
         )}
+      <CounterRack playerId={playerId} />
       <div className="life-actions">
         {lifeActions.map((amount) => (
           <button
             key={`damage-${amount}`}
             type="button"
-            onClick={() => hit(amount)}
+            className="life-action-damage"
+            onClick={(event) => {
+              playLifeActionAnimation(event.currentTarget, 'damage', amount)
+              hit(amount)
+            }}
             disabled={matchEnded}
           >
             💥 {amount}
@@ -208,13 +250,24 @@ export function LifeCounter({
           <button
             key={`heal-${amount}`}
             type="button"
-            onClick={() => heal(amount)}
+            className="life-action-heal"
+            onClick={(event) => {
+              playLifeActionAnimation(event.currentTarget, 'heal', amount)
+              heal(amount)
+            }}
             disabled={matchEnded}
           >
             💚 {amount}
           </button>
         ))}
-        <button type="button" className="reset btn-gray" onClick={reset}>
+        <button
+          type="button"
+          className="reset btn-gray"
+          onClick={(event) => {
+            playResetAnimation(event.currentTarget)
+            reset()
+          }}
+        >
           <RefreshCcw size="1.25em" />
         </button>
       </div>

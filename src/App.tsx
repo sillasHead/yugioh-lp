@@ -2,6 +2,7 @@ import './App.css'
 import { GameActions } from './components/GameActions'
 import { LifeCounter } from './components/LifeCounter'
 import { MultiLifeProvider } from './hooks/LifeProvider'
+import { CounterBoardProvider } from './hooks/CounterBoard'
 import type { Player } from './types/life-provider'
 
 const players: Player[] = [
@@ -15,17 +16,19 @@ function App() {
   return (
     <div className="container">
       <MultiLifeProvider configs={players}>
-        <LifeCounter
-          playerDirection="left"
-          playerId={player1.id}
-          otherPlayerId={player2.id}
-        />
-        <GameActions players={[player1.id, player2.id]} />
-        <LifeCounter
-          playerDirection="right"
-          playerId={player2.id}
-          otherPlayerId={player1.id}
-        />
+        <CounterBoardProvider>
+          <LifeCounter
+            playerDirection="left"
+            playerId={player1.id}
+            otherPlayerId={player2.id}
+          />
+          <GameActions players={[player1.id, player2.id]} />
+          <LifeCounter
+            playerDirection="right"
+            playerId={player2.id}
+            otherPlayerId={player1.id}
+          />
+        </CounterBoardProvider>
       </MultiLifeProvider>
     </div>
   )

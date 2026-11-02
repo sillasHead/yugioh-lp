@@ -14,6 +14,7 @@ import Dice6 from '../../assets/dice/dice-6.svg'
 import Dice from '../../assets/dice/dice.svg'
 import { useGameLife } from '../../hooks/LifeContext'
 import { GameSettings } from '../GameSettings'
+import { playResetAnimation } from '../../utils/animations'
 import './style.css'
 
 type Props = {
@@ -84,7 +85,14 @@ export function GameActions({ players }: Props) {
         </button>
       </div>
 
-      <button type="button" className="reset-game" onClick={resetAll}>
+      <button
+        type="button"
+        className="reset-game"
+        onClick={(event) => {
+          playResetAnimation(event.currentTarget)
+          resetAll()
+        }}
+      >
         <RefreshCcw size={60} />
       </button>
 
