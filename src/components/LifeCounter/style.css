@@ -150,7 +150,7 @@
     display: none;
   }
 
-  .player-1 {
+  .player-2 {
     transform: rotate(180deg);
   }
 }

@@ -99,7 +99,7 @@
       - max(12px, env(safe-area-inset-bottom))
     );
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     justify-content: space-evenly;
     gap: clamp(12px, 2svh, 16px);
   }

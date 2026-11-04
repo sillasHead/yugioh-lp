@@ -152,7 +152,7 @@ export function LifeCounter({
     if (movement === 0) return
 
     const isRotatedMobilePlayer =
-      playerId === 'player-1' && window.matchMedia('(max-width: 600px)').matches
+      playerId === 'player-2' && window.matchMedia('(max-width: 600px)').matches
     const physicalDirection: 1 | -1 = movement > 0 ? 1 : -1
     let direction: 1 | -1 = physicalDirection
     if (isRotatedMobilePlayer) {
